@@ -1,155 +1,190 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from "react";
 
 const About = () => {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false);
+  const [glitchTxt, setGlitchTxt] = useState("Fotografía");
+  const sectionRef = useRef(null);
 
+  /* IntersectionObserver para disparar animaciones */
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.3 }
-    )
+    const io = new IntersectionObserver(
+      ([entry]) => entry.isIntersecting && setIsVisible(true),
+      { threshold: 0.35 }
+    );
+    const el = sectionRef.current;
+    if (el) io.observe(el);
+    return () => el && io.unobserve(el);
+  }, []);
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
+  /* Efecto “glitch” del título mientras scrolleás */
+  useEffect(() => {
+    if (!isVisible) return;
+    const words = ["Fotografía", "Arte", "Emociones", "Recuerdos"];
+    let i = 0;
+    const t = setInterval(() => {
+      setGlitchTxt(words[(i = ++i % words.length)]);
+    }, 1800);
+    return () => clearInterval(t);
+  }, [isVisible]);
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current)
-      }
-    }
-  }, [])
-
-  const skills = [
-    { name: 'Fotografía de Retrato', level: 95 },
-    { name: 'Fotografía de Eventos', level: 88 },
-    { name: 'Fotografía de Producto', level: 92 },
-    { name: 'Edición Digital', level: 90 },
-    { name: 'Iluminación de Estudio', level: 85 },
-    { name: 'Fotografía Artística', level: 93 }
-  ]
-
-  const stats = [
-    { number: '500+', label: 'Proyectos Completados' },
-    { number: '8+', label: 'Años de Experiencia' },
-    { number: '250+', label: 'Clientes Satisfechos' },
-    { number: '50+', label: 'Premios Obtenidos' }
-  ]
+  /* Pasión cards con data */
+  const passions = [
+    {
+      emoji: "📸",
+      title: "Retratos con Alma",
+      desc: "Cada rostro cuenta una historia única.",
+    },
+    {
+      emoji: "🎞️",
+      title: "Análogo + Digital",
+      desc: "Mezclo lo mejor de dos mundos.",
+    },
+    {
+      emoji: "💡",
+      title: "Light-Painting",
+      desc: "La luz es mi lienzo en tiempo real.",
+    },
+    {
+      emoji: "🌌",
+      title: "Astro-Fotografía",
+      desc: "Capturar el universo en una gota de tiempo.",
+    },
+  ];
 
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       ref={sectionRef}
-      className="py-20 bg-white dark:bg-gray-900 relative overflow-hidden"
+      className="relative py-24 md:py-32 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-black overflow-hidden"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 opacity-50"></div>
-      <div className="absolute top-20 right-10 w-64 h-64 bg-purple-300/20 dark:bg-purple-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-10 w-48 h-48 bg-pink-300/20 dark:bg-pink-500/10 rounded-full blur-3xl"></div>
+      {/* Decorators */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 -left-24 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+      </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Left Content */}
-          <div className={`space-y-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="space-y-4">
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
-                Sobre <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Mí</span>
-              </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
-            </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* LEFT: TEXT + STATS */}
+          <div
+            className={`space-y-8 transition-all duration-1000 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-12"
+            }`}
+          >
+            {/* Glitch title */}
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">
+              Sobre{" "}
+              <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                {glitchTxt}
+                <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-600 to-pink-600 blur-sm opacity-30 animate-pulse" />
+              </span>
+            </h2>
 
-            <div className="space-y-6 text-gray-600 dark:text-gray-300">
-              <p className="text-lg leading-relaxed">
-                Soy una fotógrafa apasionada con más de 8 años de experiencia capturando momentos únicos 
-                e irrepetibles. Mi enfoque se centra en crear imágenes que no solo documenten, sino que 
-                cuenten historias profundas y emocionales.
+            {/* Bio */}
+            <div className="space-y-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+              <p>
+                Soy Melisa Paola Santa Cruz, fotógrafa profesional con más de 15
+                años de experiencia, 6 de ellos en San Carlos de Bariloche, en
+                el corazón de la Patagonia Argentina. Mi pasión por la
+                fotografía es una herencia de mi abuelo Osvaldo, y la
+                perfeccioné con estudios en fotoperiodismo y la Escuela de
+                Bellas Artes L. Spilimbero.
               </p>
-              
-              <p className="text-lg leading-relaxed">
-                Especializada en fotografía de retrato, eventos y arte conceptual, trabajo con técnicas 
-                tradicionales y modernas para lograr resultados excepcionales que superen las expectativas 
-                de mis clientes.
-              </p>
-              
-              <p className="text-lg leading-relaxed">
-                Creo firmemente que cada fotografía debe capturar no solo una imagen, sino también 
-                el alma y la esencia del momento, creando recuerdos atemporales que perduren para siempre.
+              <p>
+                Tuve la oportunidad de viajar a México, Brasil y España con una
+                cámara en mano, lo cual afianzó mi pasión por la fotografía, la
+                cual considero un excelente medio de expresión. Con el tiempo,
+                me especialicé en fotografía de bodas en la Patagonia y en
+                destino, documentando historias de amor. Actualmente soy
+                fotógrafa residente en el Hotel Llao Llao para Bariloche Foto
+                Tour.
               </p>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-6 pt-6">
-              {stats.map((stat, index) => (
-                <div 
-                  key={index}
-                  className={`text-center p-4 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all duration-1000 delay-${index * 100} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              {[
+                { n: "500+", l: "Proyectos" },
+                { n: "15+", l: "Años" },
+                { n: "250+", l: "Clientes" },
+                { n: "50+", l: "Premios" },
+              ].map((s, i) => (
+                <div
+                  key={i}
+                  className={`group relative p-4 rounded-2xl bg-white/40 dark:bg-gray-800/40 backdrop-blur border border-white/20 dark:border-gray-700/30 transition-all duration-700 hover:scale-105 hover:shadow-xl ${
+                    isVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-6"
+                  }`}
+                  style={{ transitionDelay: `${150 * i}ms` }}
                 >
-                  <div className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    {stat.number}
+                  <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    {s.n}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {stat.label}
+                    {s.l}
                   </div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Content - Skills */}
-          <div className={`space-y-8 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-            <div className="relative">
-              {/* Profile Image Placeholder */}
-              <div className="relative mx-auto w-80 h-80 rounded-3xl overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400 p-1">
-                <div className="w-full h-full rounded-3xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <div className="text-center space-y-2">
-                    <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Tu Foto Aquí</p>
-                  </div>
-                </div>
+          {/* RIGHT: IMAGE + PASSIONS */}
+          <div
+            className={`space-y-10 transition-all duration-1000 delay-300 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-12"
+            }`}
+          >
+            {/* Glass-frame image */}
+            <div className="group relative w-full max-w-md mx-auto">
+              <div className="absolute -inset-1.5 bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl blur-lg opacity-70 group-hover:opacity-100 transition duration-500" />
+              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl transform group-hover:rotate-3 group-hover:scale-105 transition-transform duration-500">
+                <img
+                  src="portada.webp"
+                  alt="Retratos"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-70 blur-xl"></div>
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-70 blur-xl"></div>
             </div>
 
-            {/* Skills */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Especialidades</h3>
-              
-              <div className="space-y-4">
-                {skills.map((skill, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-700 dark:text-gray-300 font-medium">{skill.name}</span>
-                      <span className="text-purple-600 dark:text-purple-400 font-semibold">{skill.level}%</span>
-                    </div>
-                    <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full transition-all duration-1000 delay-${index * 100} ${isVisible ? 'w-full' : 'w-0'}`}
-                        style={{ width: isVisible ? `${skill.level}%` : '0%' }}
-                      ></div>
-                    </div>
+            {/* Pasión cards con 3-D hover */}
+            <div className="grid grid-cols-2 gap-4">
+              {passions.map((p, i) => (
+                <div
+                  key={i}
+                  className={`group relative p-4 rounded-2xl bg-white/30 dark:bg-gray-800/30 backdrop-blur border border-white/20 dark:border-gray-700/30 transition-all duration-700 hover:!scale-105 hover:z-10 ${
+                    isVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-6"
+                  }`}
+                  style={{
+                    transitionDelay: `${200 * i}ms`,
+                    perspective: "800px",
+                  }}
+                >
+                  <div className="transform-gpu transition-transform duration-300 group-hover:[transform:rotateY(8deg)_rotateX(-4deg)]">
+                    <div className="text-3xl mb-2">{p.emoji}</div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                      {p.title}
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      {p.desc}
+                    </p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default About
+export default About;
