@@ -5,6 +5,7 @@ import Portfolio from './components/Portfolio'
 import Services from './components/Services'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import TaggboxReviews from './components/TagBoxReview'
 import { ThemeProvider } from './context/ThemeContext'
 
 function App() {
@@ -12,10 +13,11 @@ function App() {
     <ThemeProvider>
       <div className="min-h-screen bg-gray-900 text-white transition-colors duration-500">
         <Hero />
-        <About />
+        <About/>
         <Portfolio />
         <Services />
         <Contact />
+        <TaggboxReviews widgetId="299655" />
         <Footer />
       </div>
     </ThemeProvider>

@@ -10,13 +10,14 @@ const Hero = () => {
     '/hero/hero-2.webp',
     '/hero/hero-3.webp',
     '/hero/hero-4.webp',
+    '/hero/hero-5.webp',
   ];
 
   /* ---------- 2. Cambio automático cada 5 s ---------- */
   useEffect(() => {
     const t = setInterval(() => {
       setBgIndex((i) => (i + 1) % bgImages.length);
-    }, 5000);
+    }, 2000);
     return () => clearInterval(t);
   }, [bgImages.length]);
 
@@ -100,19 +101,9 @@ const Hero = () => {
               onClick={scrollToPortfolio}
               className="group inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-white font-medium hover:shadow-xl hover:shadow-amber-500/30 transition-all"
             >
-              Ver mi trabajo
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              Ver mi trabajo  
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* Scroll-indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-5 h-8 border border-stone-400 rounded-full flex justify-center">
-          <div className="w-1 h-2 bg-stone-300 rounded-full mt-2" />
         </div>
       </div>
 
