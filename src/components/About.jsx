@@ -37,7 +37,7 @@ const About = () => {
         }`}
       >
         <img
-          src="/about1.webp"
+          src="/retrato-27.webp"
           alt="Fotografía 1"
           className="w-full h-[60vh] object-cover rounded-2xl shadow-2xl"
         />
@@ -46,7 +46,7 @@ const About = () => {
       {/* Centro: texto "About Me" */}
       <div
         ref={centerRef}
-        className={`max-w-3xl mx-auto px-6 text-center my-16 transition-all duration-1000 delay-300 ${
+        className={`max-w-3xl mx-auto px-6 text-center my-16 transition-all duration-1000 delay-500 ${
           topVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >

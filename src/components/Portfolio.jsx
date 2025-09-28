@@ -29,7 +29,8 @@ const AbstractMasonryPortfolio = () => {
       image: `/boda-${i + 1}.webp`,
       height: ['h-64', 'h-80', 'h-96', 'h-72'][i % 4],
     })),
-    ...Array.from({ length: 27 }, (_, i) => ({
+    ...Array.from({ length: 26
+     }, (_, i) => ({
       id: `retrato-${i + 1}`,
       category: 'retratos',
       image: `/retrato-${i + 1}.webp`,

@@ -450,3 +450,16 @@
 .h-full.fixed {
   display: none !important;
 }
+
+
+
+/* 1. Quita el outline nativo del root */
+html:focus,
+body:focus {
+  outline: none !important;
+}
+
+/* 2. Evita que el html reciba focus automático */
+html {
+  tab-index: -1;
+}
