@@ -5,10 +5,11 @@ import Portfolio from './components/Portfolio'
 import Services from './components/Services'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
-import TaggboxReviews from './components/TagBoxReview'
+import TaggboxReviews from './components/SocialProof'
 import { ThemeProvider } from './context/ThemeContext'
 
 import { useEffect } from 'react';
+import DroneSection from './components/DroneSection'
 
 function App() {
   useEffect(() => {
@@ -31,8 +32,9 @@ function App() {
     <ThemeProvider>
       <div className="min-h-screen bg-gray-900 text-white transition-colors duration-500">
         <Hero />
-        <About />
         <Portfolio />
+        <DroneSection/>
+        <About />
         <Services />
         <Contact />
         <TaggboxReviews widgetId="299655" />

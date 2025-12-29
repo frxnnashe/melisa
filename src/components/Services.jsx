@@ -16,12 +16,12 @@ const Services = () => {
     {
       id:1,
       title:'Fotografía de Boda',
-      description:'Cobertura con estilo documental. Bodas en Bariloche y destino.',
+      description:'Bodas en Bariloche y destino.',
       features:[
         'Cobertura completa del evento',
         'Sesiones pre-boda',
         'Sesiones post-boda',
-        'Video documental y drone'
+        'Video documental y drone',
       ],
       price:'Consultar',
       icon:'💍',
@@ -36,9 +36,9 @@ const Services = () => {
         'Sesiones de Parejas',
         'Sesiones de Familias',
         'Sesiones de Retratos',
-        'Fotografía de Compromiso'
+        'Fotografía de Compromiso',
       ],
-      price:'USD 180',
+      price:'USD 180',  
       icon:'📷',
       gradient:'from-gray-300 to-gray-500',
       whatsapp:true
@@ -46,7 +46,7 @@ const Services = () => {
     {
       id:3,
       title:'Fotografía de Eventos',
-      description:'Fiesta de 15 años con video reels y producciones con drone.',
+      description:' Cobertura profesional para Cumpleaños y Eventos Corporativos',
       features:[
         'Fiesta de 15 años',
         'Video reels',
@@ -75,7 +75,6 @@ const Services = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center space-y-4 mb-16 transition-all duration-1000 ${isVisible?'opacity-100 translate-y-0':'opacity-0 translate-y-10'}`}>
           <h2 className="text-4xl lg:text-5xl font-bold text-white">Mis <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Precios</span></h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">Servicios profesionales de fotografía diseñados para capturar tus momentos más preciados.</p>
           <div className="w-20 h-1 bg-gradient-to-r from-white to-gray-400 rounded-full mx-auto" />
         </div>
 

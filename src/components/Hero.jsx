@@ -65,7 +65,7 @@ const Hero = () => {
             }`}
           >
             {[
-              { label: 'Inicio', href: '#inicio' },
+              { label: 'Inicio', href: '' },
               { label: 'Portfolio', href: '#portfolio' },
               { label: 'Precios', href: '#services' },
               { label: 'Contacto', href: '#footer' },

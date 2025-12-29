@@ -37,7 +37,7 @@ const About = () => {
         }`}
       >
         <img
-          src="/retrato-27.webp"
+          src="/fotobelo.webp"
           alt="Fotografía 1"
           className="w-full h-[60vh] object-cover rounded-2xl shadow-2xl"
         />
@@ -65,7 +65,21 @@ const About = () => {
         </p>
 
         <p className="text-lg text-gray-300 leading-relaxed">
-         Mi pasión por la fotografía surgió hace muchos años, inspirada en las fotos de mi abuelo Osvaldo, comencé mis estudios en la escuela de bellas artes. Luego, tuve la oportunidad de viajar con una cámara en mano por Argentina, México, Brasil y España. Esto afianzó aún más mi pasión por la fotografía, la cual considero un excelente medio artístico y creativo de expresión. He explorado diversos géneros fotográficos y, con el tiempo, me especialicé en lo que más me gusta: la fotografía de bodas, documentando historias de amor.
+          Mi pasión por la fotografía surgió hace muchos años, inspirada en las
+          fotos de mi abuelo Osvaldo, comencé mis estudios en la escuela de
+          bellas artes. Luego, tuve la oportunidad de viajar con una cámara en
+          mano por Argentina, México, Brasil y España. Esto afianzó aún más mi
+          pasión por la fotografía, la cual considero un excelente medio
+          artístico y creativo de expresión. He explorado diversos géneros
+          fotográficos y, con el tiempo, me especialicé en lo que más me gusta:
+          la fotografía de bodas, documentando historias de amor.
+        </p>
+
+        <p className="text-lg text-gray-300 leading-relaxed mt-6">
+          Actualmente soy fotógrafa en Bariloche sesiones personalizadas,
+          fotógrafa de eventos, productos y mis favoritas las bodas y Elopement
+          a destino . y trabajo de fotografa residente en el Hotel Llao Llao
+          para Bariloche Foto Tour.
         </p>
 
         {/* CTA sutil */}
