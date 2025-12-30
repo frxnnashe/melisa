@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
+// Función para precargar imágenes
+const preloadImages = (imageUrls) => {
+  return Promise.all(
+    imageUrls.map(url => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(url);
+        img.onerror = () => resolve(url);
+        img.src = url;
+      });
+    })
+  );
+};
+
 const Hero = () => {
   const [bgIndex, setBgIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [imagesReady, setImagesReady] = useState(false);
 
   const bgImages = [
     '/hero/hero-1.webp',
@@ -14,18 +29,27 @@ const Hero = () => {
   ];
 
   useEffect(() => {
-    const timer = setInterval(() => setBgIndex(i => (i + 1) % bgImages.length), 4000);
-    return () => clearInterval(timer);
-  }, [bgImages.length]);
+    // Precargar todas las imágenes del hero
+    preloadImages(bgImages).then(() => {
+      setImagesReady(true);
+      setIsLoaded(true);
+    });
+  }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
+    // Solo iniciar el carrusel cuando las imágenes estén listas
+    if (!imagesReady) return;
+    
+    const timer = setInterval(() => {
+      setBgIndex(i => (i + 1) % bgImages.length);
+    }, 4000);
+    
+    return () => clearInterval(timer);
+  }, [imagesReady, bgImages.length]);
 
   return (
     <div id="inicio" className="relative h-screen overflow-hidden bg-gray-900">
-      {/* Fondos - SIN efectos de mouse */}
+      {/* Fondos */}
       <div className="absolute inset-0">
         {bgImages.map((src, i) => (
           <div
@@ -34,10 +58,9 @@ const Hero = () => {
               i === bgIndex ? 'opacity-100' : 'opacity-0'
             }`}
             style={{
-              backgroundImage: `url(${src})`,
+              backgroundImage: imagesReady ? `url(${src})` : 'none',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              // SIN transform ni efectos de mouse
             }}
           />
         ))}
