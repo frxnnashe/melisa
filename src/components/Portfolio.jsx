@@ -119,12 +119,12 @@ const postWeddingImages = Array.from(
 
 const portraitsPart1 = [
   {
-    title: "Sesiones personalizadas de Parejas, Familias y Retratos",
+    title: "Sesión exclusiva retratos personalizados, parejas y familias.",
     description: "Momentos únicos y mucho más...",
     images: Array.from({ length: 6 }, (_, i) => `/sesiones-${i + 1}.webp`),
   },
   {
-    title: "Pedida de mano sorpresa",
+    title: "Pedida de mano sorpresa en Bariloche",
     description: "",
     images: Array.from({ length: 2 }, (_, i) => `/pedida-${i + 1}.webp`),
   },
@@ -145,7 +145,7 @@ const portraitsPart1 = [
   },
   {
     title: "Invierno",
-    description: "Nieve y paisajes blancos",
+    description: "Magia bajo la nieve y paisajes blancos. Tus recuerdos más preciados",
     images: Array.from({ length: 7 }, (_, i) => `/invierno-${i + 1}.webp`),
   },
 ];
@@ -295,8 +295,7 @@ const PortfolioDocumental = () => {
         </div>
 
         {/* Contenido del portfolio */}
-        <div
-        >
+        <div>
           {selectedCategory === "bodas" && (
             <div className="space-y-32" key="bodas-content">
               <div className="text-center max-w-3xl mx-auto px-6 py-10 border-b border-white/10">
@@ -308,8 +307,8 @@ const PortfolioDocumental = () => {
                 </h3>
                 <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed">
                   Un servicio de fotografía con estilo documental, desde los
-                  preparativos, la ceremonia, la celebración y una mini sesión
-                  de bodas, hasta la última canción de la fiesta.
+                  preparativos, la ceremonia, sesión de retratos de pareja, la
+                  celebración, la fiesta y hasta la última canción.
                 </p>
               </div>
 

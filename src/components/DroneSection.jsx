@@ -5,15 +5,14 @@ const DroneSection = () => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    // Misma lógica de animación que el portfolio principal
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(entry.target); // Dejar de observar una vez animado
+          observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.2 } // Se activa cuando el 20% del componente es visible
+      { threshold: 0.2 }
     );
     
     const currentRef = sectionRef.current;
@@ -31,7 +30,6 @@ const DroneSection = () => {
       ref={sectionRef} 
       className="py-24 bg-[#0a0a0a] text-white relative overflow-hidden"
     >
-      {/* Elemento decorativo de fondo sutil */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-gradient-to-b from-transparent to-white/20"></div>
 
       <div 
@@ -55,30 +53,51 @@ const DroneSection = () => {
           </p>
         </div>
 
-        {/* --- Contenedor del Video --- */}
-        <div className="relative w-full rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group">
+        {/* --- Grid de Videos --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           
-          {/* Overlay sutil que se aclara al pasar el mouse */}
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none"></div>
+          {/* Video 1 */}
+          <div className="relative w-full rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group">
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none"></div>
 
-          <div className="aspect-video w-full relative">
-             <video
+            <div className="aspect-video w-full relative">
+              <video
                 className="absolute inset-0 w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-[2000ms] ease-in-out"
                 autoPlay
                 loop
                 muted
                 playsInline
-                // poster="/ruta-a-una-imagen-de-portada-del-video.jpg" 
-             >
-                {/* REEMPLAZA ESTA RUTA POR TU VIDEO */}
+              >
                 <source src="/video-drone.webm" type="video/webm" />
                 Tu navegador no soporta el tag de video.
-             </video>
+              </video>
+            </div>
+
+            <div className="absolute bottom-4 right-6 z-20 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+              <p className="text-xs uppercase tracking-widest text-white/80">Drone 4K UHD</p>
+            </div>
           </div>
 
-          {/* Etiqueta decorativa en esquina */}
-          <div className="absolute bottom-4 right-6 z-20 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-             <p className="text-xs uppercase tracking-widest text-white/80">Drone 4K UHD</p>
+          {/* Video 2 */}
+          <div className="relative w-full rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group">
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none"></div>
+
+            <div className="aspect-video w-full relative">
+              <video
+                className="absolute inset-0 w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-[2000ms] ease-in-out"
+                autoPlay
+                loop
+                muted
+                playsInline
+              >
+                <source src="/video-drone-2.mp4" type="video/webm" />
+                Tu navegador no soporta el tag de video.
+              </video>
+            </div>
+
+            <div className="absolute bottom-4 right-6 z-20 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+              <p className="text-xs uppercase tracking-widest text-white/80">Drone 4K UHD</p>
+            </div>
           </div>
 
         </div>
