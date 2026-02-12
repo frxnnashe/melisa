@@ -22,8 +22,11 @@ const Services = () => {
         'Sesiones pre-boda',
         'Sesiones post-boda',
         'Video documental y drone',
+        'Bodas Íntimas o Elopements.',
+        'Asesoramiento de salones, decoraciones, maquillaje y mucho más.',
       ],
-      price:'Consultar',
+      price:'Desde 600 USD', 
+      showQuoteButton: true,
       icon:'💍',
       gradient:'from-white to-gray-300',
       whatsapp:true
@@ -31,12 +34,12 @@ const Services = () => {
     {
       id:2,
       title:'Fotografía de Retratos',
-      description:'Sesiones de parejas, familias y retratos. Fotografía de compromiso.',
+      description:'Tour Fotográfico',
       features:[
-        'Sesiones de Parejas',
-        'Sesiones de Familias',
-        'Sesiones de Retratos',
-        'Fotografía de Compromiso',
+        'Sesiones Personalizadas (Parejas, Familias y Retratos).',
+        'Pedidas de Mano Sorpresa.',
+        'Nuevo servicio de fotografía con drone.',
+        '📍 Locaciones a consultar: Bariloche y alrededores.',
       ],
       price:'USD 180',  
       icon:'📷',
@@ -46,14 +49,15 @@ const Services = () => {
     {
       id:3,
       title:'Fotografía de Eventos',
-      description:' Cobertura profesional para Cumpleaños y Eventos Corporativos',
+      description:' Cobertura profesional',
       features:[
         'Fiesta de 15 años',
-        'Video reels',
-        'Producciones pre 15 años',
-        'Producciones con drone'
+        'Cumpleaños y Eventos Corporativos.',
+        'Video en vivo del momento.',
+        'Video tradicional y reels.'
       ],
       price:'USD 350',
+      showQuoteButton: true,
       icon:'🎉',
       gradient:'from-gray-400 to-gray-600',
       whatsapp:true
@@ -89,17 +93,24 @@ const Services = () => {
                 <ul className="space-y-2 mb-6">
                   {s.features.map((f,idx)=>(<li key={idx} className="flex items-center text-gray-400 text-sm"><div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${s.gradient} mr-3`}></div>{f}</li>))}
                 </ul>
-                <div className="flex items-center justify-between">
-                  <span className={`text-2xl font-bold bg-gradient-to-r ${s.gradient} bg-clip-text text-transparent`}>{s.price}</span>
-                  {s.whatsapp && (
-                    <button 
-                      onClick={handleWhatsApp}
-                      className="px-6 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 hover:scale-105 transition flex items-center gap-2"
-                    >
-                      <span>💬</span>
-                      Consultar
-                    </button>
-                  )}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className={`text-2xl font-bold bg-gradient-to-r ${s.gradient} bg-clip-text text-transparent block`}>{s.price}</span>
+                      {s.showQuoteButton && (
+                        <p className="text-gray-400 text-sm mt-1">Consultar cotización</p>
+                      )}
+                    </div>
+                    {s.whatsapp && (
+                      <button 
+                        onClick={handleWhatsApp}
+                        className="px-6 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 hover:scale-105 transition flex items-center gap-2"
+                      >
+                        <span>💬</span>
+                        Consultar
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
