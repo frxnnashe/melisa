@@ -83,7 +83,7 @@ const weddingsCouples = [
     images: Array.from({ length: 6 }, (_, i) => `/boda-natalia-${i + 1}.webp`),
   },
   {
-    couple: "Marcelo & Michelli",
+    couple: "Marcelo & Michelle",
     location: "Hotel Llao Llao",
     images: Array.from({ length: 3 }, (_, i) => `/boda-marcelo-${i + 1}.webp`),
   },
@@ -160,7 +160,7 @@ const portraitsPart2 = [
     images: Array.from({ length: 3 }, (_, i) => `/circuito-${i + 1}.webp`),
   },
   {
-    title: "Estepa y Mirador de Valle encantados",
+    title: "Estepa y Mirador de Valle Encantado",
     description: "Paisajes inmensos y rocosos",
     images: Array.from({ length: 5 }, (_, i) => `/estepa-${i + 1}.webp`),
   },
@@ -255,6 +255,7 @@ const PortfolioDocumental = () => {
                 alt={group.title || "Portfolio"}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-90 group-hover:brightness-100"
                 loading="lazy"
+                decoding="async"
               />
             </div>
           ))}
@@ -349,6 +350,7 @@ const PortfolioDocumental = () => {
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             alt={wedding.couple}
                             loading={shouldEagerLoad ? "eager" : "lazy"}
+                            decoding="async"
                           />
                         </div>
                       ))}
@@ -377,6 +379,7 @@ const PortfolioDocumental = () => {
                         alt="Fiesta de boda"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   ))}
@@ -402,6 +405,7 @@ const PortfolioDocumental = () => {
                         alt="Momento especial"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   ))}
@@ -439,6 +443,7 @@ const PortfolioDocumental = () => {
                         alt="Postboda"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   ))}
@@ -492,6 +497,7 @@ const PortfolioDocumental = () => {
                     alt="Evento"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
               ))}

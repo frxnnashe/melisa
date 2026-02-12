@@ -4,7 +4,15 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerSections = [
-    { title: 'Información', links: ['Sobre Mí', 'Portfolio', 'Testimonios', 'Precios'] },
+    {
+      title: 'Información',
+      links: [
+        { name: 'Sobre Mí', href: '#about' },
+        { name: 'Portfolio', href: '#portfolio' },
+        { name: 'Testimonios', href: '#testimonios' },
+        { name: 'Precios', href: '#services' }
+      ]
+    },
   ];
 
   const socialMedia = [
@@ -13,12 +21,6 @@ const Footer = () => {
       icon: '📷', 
       color: 'hover:bg-gray-600',
       href: 'https://www.instagram.com/fotosmelisasantacruz/'
-    },
-    { 
-      name: 'Facebook', 
-      icon: '👥', 
-      color: 'hover:bg-gray-700',
-      href: '#'
     },
     { 
       name: 'WhatsApp', 
@@ -76,7 +78,7 @@ const Footer = () => {
               <ul className="space-y-3">
                 {s.links.map((l, idx) => (
                   <li key={idx}>
-                    <a href="#" className="text-gray-400 hover:text-gray-200 transition">{l}</a>
+                    <a href={l.href} className="text-gray-400 hover:text-gray-200 transition">{l.name}</a>
                   </li>
                 ))}
               </ul>

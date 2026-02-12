@@ -74,7 +74,7 @@ const Services = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center space-y-4 mb-16 transition-all duration-1000 ${isVisible?'opacity-100 translate-y-0':'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl lg:text-5xl font-bold text-white">Mis <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Precios</span></h2>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white">Valor de las <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Sesiones</span></h2>
           <div className="w-20 h-1 bg-gradient-to-r from-white to-gray-400 rounded-full mx-auto" />
         </div>
 

@@ -74,6 +74,7 @@ const SocialProof = () => {
 
   return (
     <section 
+      id="testimonios"
       ref={sectionRef} 
       className="py-24 bg-[#0a0a0a] text-white border-t border-white/5"
     >
@@ -94,7 +95,7 @@ const SocialProof = () => {
             La Experiencia
           </h2>
           <p className="text-gray-400 font-light tracking-wide uppercase text-xs md:text-sm">
-            Sus palabras, nuestra mayor satisfacción
+            Sus palabras, mi mayor satisfacción
           </p>
         </div>
 

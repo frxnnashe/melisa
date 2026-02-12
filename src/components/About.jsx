@@ -28,13 +28,11 @@ const About = () => {
   }, []);
 
   return (
-    <section className="py-20 md:py-32 bg-black overflow-hidden">
+    <section id="about" className="py-20 md:py-32 bg-black overflow-hidden">
       {/* Foto superior (reveal ↓) */}
       <div
         ref={topRef}
-        className={`max-w-5xl mx-auto px-6 mb-12 transition-all duration-1000 ${
-          topVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
-        }`}
+        className="max-w-5xl mx-auto px-6 mb-12"
       >
         <img
           src="/fotobelo.webp"
@@ -46,9 +44,7 @@ const About = () => {
       {/* Centro: texto "About Me" */}
       <div
         ref={centerRef}
-        className={`max-w-3xl mx-auto px-6 text-center my-16 transition-all duration-1000 delay-500 ${
-          topVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
+        className="max-w-3xl mx-auto px-6 text-center my-16"
       >
         <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
           Sobre{" "}
@@ -91,11 +87,7 @@ const About = () => {
       {/* Foto inferior (reveal ↑) */}
       <div
         ref={bottomRef}
-        className={`max-w-5xl mx-auto px-6 mt-12 transition-all duration-1000 ${
-          bottomVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
+        className="max-w-5xl mx-auto px-6 mt-12"
       >
         <img
           src="/about2.webp"

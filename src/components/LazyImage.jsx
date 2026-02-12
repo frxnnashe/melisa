@@ -6,7 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
  * @param {string} alt - Texto alternativo
  * @param {string} className - Clases CSS
  * @param {Function} onClick - Handler de click
- * @param {number} rootMargin - Margen en px antes de cargar (default: 100)
+ * @param {number} rootMargin - Margen en px antes de cargar (default: 300)
  * @param {string} placeholder - Color de fondo mientras carga (default: 'bg-gray-900')
  */
 const LazyImage = ({ 
@@ -14,7 +14,7 @@ const LazyImage = ({
   alt = '', 
   className = '', 
   onClick,
-  rootMargin = 100,
+  rootMargin = 300,
   placeholder = 'bg-gray-900'
 }) => {
   const [loaded, setLoaded] = useState(false);

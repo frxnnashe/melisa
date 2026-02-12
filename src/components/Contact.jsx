@@ -148,16 +148,18 @@ const Contact = () => {
               <h3 className="text-xl font-bold text-white mb-4">Sígueme</h3>
               <div className="flex space-x-4">
                 {[
-                  { icon: '📷', color: 'from-gray-400 to-gray-600' },
-                  { icon: '👥', color: 'from-gray-500 to-gray-700' },
-                  { icon: '💬', color: 'from-gray-600 to-gray-800' }
+                  { icon: '📷', color: 'from-gray-400 to-gray-600', href: 'https://www.instagram.com/fotosmelisasantacruz/' },
+                  { icon: '💬', color: 'from-gray-600 to-gray-800', href: 'https://wa.me/5493541521405' }
                 ].map((s, i) => (
-                  <button 
-                    key={i} 
+                  <a 
+                    key={i}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={`w-12 h-12 rounded-xl bg-gradient-to-r ${s.color} text-white flex items-center justify-center hover:scale-110 transition-transform`}
                   >
                     {s.icon}
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
