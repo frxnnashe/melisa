@@ -12,41 +12,31 @@ const preloadImages = (imageUrls) => {
   );
 };
 
-// Componente LazyImage - Carga las imágenes solo cuando son visibles
-const LazyImage = ({ src, alt, className, onClick }) => {
+// Componente LazyImage optimizado - Precarga agresiva para evitar pantallas negras
+const LazyImage = ({ src, alt, className, onClick, eager = false }) => {
   const [loaded, setLoaded] = useState(false);
   const imgRef = useRef(null);
 
-  useEffect(() => {
-    if (!imgRef.current) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const img = imgRef.current;
-          img.src = src;
-          img.onload = () => setLoaded(true);
-          observer.disconnect();
-        }
-      },
-      {
-        rootMargin: "100px", // Empieza a cargar 100px antes de que sea visible
-      }
-    );
-
-    observer.observe(imgRef.current);
-    return () => observer.disconnect();
-  }, [src]);
-
+  // Cargar TODAS las imágenes inmediatamente, sin lazy loading
+  // Esto evita las pantallas negras durante el scroll
   return (
-    <img
-      ref={imgRef}
-      alt={alt}
-      className={`${className} ${
-        loaded ? "opacity-100" : "opacity-0"
-      } transition-opacity duration-500`}
-      onClick={onClick}
-    />
+    <div ref={imgRef} className="relative w-full h-full bg-gray-900">
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} ${
+          loaded ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-300`}
+        onLoad={() => setLoaded(true)}
+        onClick={onClick}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+      />
+      {/* Skeleton loader mientras carga */}
+      {!loaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 animate-pulse" />
+      )}
+    </div>
   );
 };
 
@@ -204,13 +194,6 @@ const PortfolioDocumental = () => {
       ([e]) => {
         if (e.isIntersecting) {
           setIsVisible(true);
-          const firstWeddingImages = [
-            "/boda-sol-1.webp",
-            "/boda-sol-2.webp",
-            "/boda-sol-3.webp",
-          ];
-          // Usar la función preloadImages importada
-          // preloadImages(firstWeddingImages);
         }
       },
       { threshold: 0.1 }
@@ -219,6 +202,36 @@ const PortfolioDocumental = () => {
     if (el) io.observe(el);
     return () => el && io.unobserve(el);
   }, []);
+
+  // Precargar imágenes de la categoría activa
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let imagesToPreload = [];
+    
+    if (selectedCategory === 'bodas') {
+      imagesToPreload = [
+        ...weddingsCouples.flatMap(w => w.images),
+        ...partyImages,
+        ...momentsImages,
+        ...postWeddingImages,
+      ];
+    } else if (selectedCategory === 'retratos') {
+      imagesToPreload = [
+        ...portraitsPart1.flatMap(p => p.images),
+        ...portraitsPart2.flatMap(p => p.images),
+      ];
+    } else if (selectedCategory === 'eventos') {
+      imagesToPreload = eventsData.map(e => e.src);
+    }
+
+    // Precargar en segundo plano
+    if (imagesToPreload.length > 0) {
+      setTimeout(() => {
+        preloadImages(imagesToPreload);
+      }, 100);
+    }
+  }, [selectedCategory, isVisible]);
 
   // Componente para renderizar grupos de imágenes (retratos)
   const RenderGroup = ({ group }) => {
@@ -247,15 +260,12 @@ const PortfolioDocumental = () => {
             <div
               key={idx}
               onClick={() => setSelectedImage({ image: imgSrc })}
-              className={`${heightClass} relative overflow-hidden cursor-pointer group bg-gray-900`}
+              className={`${heightClass} overflow-hidden cursor-pointer group`}
             >
-              {/* Usa LazyImage importado */}
-              <img
+              <LazyImage
                 src={imgSrc}
                 alt={group.title || "Portfolio"}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-90 group-hover:brightness-100"
-                loading="lazy"
-                decoding="async"
               />
             </div>
           ))}
@@ -295,10 +305,10 @@ const PortfolioDocumental = () => {
           ))}
         </div>
 
-        {/* Contenido del portfolio */}
+        {/* Contenido del portfolio - Todas las categorías siempre en el DOM */}
         <div>
-          {selectedCategory === "bodas" && (
-            <div className="space-y-32" key="bodas-content">
+          {/* BODAS */}
+          <div className={`space-y-32 ${selectedCategory !== "bodas" ? "hidden" : ""}`}>
               <div className="text-center max-w-3xl mx-auto px-6 py-10 border-b border-white/10">
                 <h3
                   className="text-4xl md:text-5xl font-serif mb-6"
@@ -342,14 +352,13 @@ const PortfolioDocumental = () => {
                           onClick={() => setSelectedImage({ image: imgSrc })}
                           className={`${
                             isTwoPhotos ? "h-80 md:h-96" : "h-64 md:h-80"
-                          } relative overflow-hidden cursor-pointer group bg-gray-900`}
+                          } overflow-hidden cursor-pointer group`}
                         >
-                          <img
+                          <LazyImage
                             src={imgSrc}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             alt={wedding.couple}
-                            loading={shouldEagerLoad ? "eager" : "lazy"}
-                            decoding="async"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            eager={shouldEagerLoad}
                           />
                         </div>
                       ))}
@@ -371,14 +380,12 @@ const PortfolioDocumental = () => {
                     <div
                       key={idx}
                       onClick={() => setSelectedImage({ image: imgSrc })}
-                      className="h-60 md:h-72 relative overflow-hidden cursor-pointer group bg-gray-900"
+                      className="h-60 md:h-72 overflow-hidden cursor-pointer group"
                     >
-                      <img
+                      <LazyImage
                         src={imgSrc}
                         alt="Fiesta de boda"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                        loading="lazy"
-                        decoding="async"
                       />
                     </div>
                   ))}
@@ -397,14 +404,12 @@ const PortfolioDocumental = () => {
                     <div
                       key={idx}
                       onClick={() => setSelectedImage({ image: imgSrc })}
-                      className="h-80 relative overflow-hidden cursor-pointer group shadow-lg bg-gray-900"
+                      className="h-80 overflow-hidden cursor-pointer group shadow-lg"
                     >
-                      <img
+                      <LazyImage
                         src={imgSrc}
                         alt="Momento especial"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                        decoding="async"
                       />
                     </div>
                   ))}
@@ -433,25 +438,23 @@ const PortfolioDocumental = () => {
                     <div
                       key={idx}
                       onClick={() => setSelectedImage({ image: imgSrc })}
-                      className={`relative overflow-hidden cursor-pointer group bg-gray-900 ${
+                      className={`overflow-hidden cursor-pointer group ${
                         idx === 0 ? "md:col-span-2" : ""
                       } h-80 md:h-96`}
                     >
-                      <img
+                      <LazyImage
                         src={imgSrc}
                         alt="Postboda"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                        decoding="async"
                       />
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-          )}
-          {selectedCategory === "retratos" && (
-            <div className="space-y-12" key="retratos-content">
+          
+          {/* RETRATOS */}
+          <div className={`space-y-12 ${selectedCategory !== "retratos" ? "hidden" : ""}`}>
               {/* Primera parte de retratos */}
               <div>
                 {portraitsPart1.map((group, idx) => (
@@ -479,29 +482,23 @@ const PortfolioDocumental = () => {
                 ))}
               </div>
             </div>
-          )}
-          {selectedCategory === "eventos" && (
-            <div
-              className="grid grid-cols-2 md:grid-cols-4 gap-4"
-              key="eventos-content"
-            >
-              {eventsData.map((item, i) => (
-                <div
-                  key={i}
-                  onClick={() => setSelectedImage({ image: item.src })}
-                  className="aspect-square overflow-hidden cursor-pointer group bg-gray-900"
-                >
-                  <img
-                    src={item.src}
-                    alt="Evento"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          
+          {/* EVENTOS */}
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${selectedCategory !== "eventos" ? "hidden" : ""}`}>
+            {eventsData.map((item, i) => (
+              <div
+                key={i}
+                onClick={() => setSelectedImage({ image: item.src })}
+                className="aspect-square overflow-hidden cursor-pointer group"
+              >
+                <LazyImage
+                  src={item.src}
+                  alt="Evento"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
