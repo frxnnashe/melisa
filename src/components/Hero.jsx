@@ -196,7 +196,7 @@ const Hero = () => {
             }`}
           >
             <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed mb-12 max-w-2xl mx-auto">
-              Narrando historias con luz, mi trabajo es crear retratos que capturan emociones y recuerdos que atesoras para siempre. Con base en la Patagonia, viajó a donde el amor me lleve para documentar tu historia en lugares que respiren naturaleza.
+              Narrando historias con luz, mi trabajo es crear retratos que capturan emociones y recuerdos que atesoras para siempre. Con base en la Patagonia, viajo a donde el amor me lleve para documentar tu historia en lugares que respiren naturaleza.
             </p>
           </div>
         </div>

@@ -18,14 +18,14 @@ const Services = () => {
       title:'Fotografía de Boda',
       description:'Bodas en Bariloche y destino.',
       features:[
-        'Cobertura completa del evento',
-        'Sesiones pre-boda',
-        'Sesiones post-boda',
-        'Video documental y drone',
-        'Bodas Íntimas o Elopements.',
+        'Cobertura completa del evento.',
+        'Sesiones pre-boda.',
+        'Sesiones post-boda.',
+        'Video documental y drone.',
+        'Bodas Íntimas, Elopements de destino.',
         'Asesoramiento de salones, decoraciones, maquillaje y mucho más.',
       ],
-      price:'Desde 600 USD', 
+      price:'Desde 650 USD', 
       showQuoteButton: true,
       icon:'💍',
       gradient:'from-white to-gray-300',
@@ -41,7 +41,7 @@ const Services = () => {
         'Nuevo servicio de fotografía con drone.',
         '📍 Locaciones a consultar: Bariloche y alrededores.',
       ],
-      price:'USD 180',  
+      price:'USD 200',  
       icon:'📷',
       gradient:'from-gray-300 to-gray-500',
       whatsapp:true
@@ -51,12 +51,12 @@ const Services = () => {
       title:'Fotografía de Eventos',
       description:' Cobertura profesional',
       features:[
-        'Fiesta de 15 años',
+        'Fiesta de 15 años.',
         'Cumpleaños y Eventos Corporativos.',
-        'Video en vivo del momento.',
+        'Video en vivo.',
         'Video tradicional y reels.'
       ],
-      price:'USD 350',
+      price:'USD 400',
       showQuoteButton: true,
       icon:'🎉',
       gradient:'from-gray-400 to-gray-600',
@@ -78,7 +78,7 @@ const Services = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center space-y-4 mb-16 transition-all duration-1000 ${isVisible?'opacity-100 translate-y-0':'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl lg:text-5xl font-bold text-white">Valor de las <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Sesiones</span></h2>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white">Tarifas y <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Servicios</span></h2>
           <div className="w-20 h-1 bg-gradient-to-r from-white to-gray-400 rounded-full mx-auto" />
         </div>
 

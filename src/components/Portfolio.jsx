@@ -65,12 +65,12 @@ const weddingsCouples = [
   {
     couple: "Nahir y Juan",
     location: "Americana Lago Gutierrez, Bariloche",
-    images: Array.from({ length: 2 }, (_, i) => `/boda-nahir-${i + 1}.webp`),
+    images: Array.from({ length: 3 }, (_, i) => `/boda-nahir-${i + 1}.webp`),
   },
   {
     couple: "Natalia y Pablo",
     location: "Americana Lago Guitierrez",
-    images: Array.from({ length: 6 }, (_, i) => `/boda-natalia-${i + 1}.webp`),
+    images: Array.from({ length: 5 }, (_, i) => `/boda-natalia-${i + 1}.webp`),
   },
   {
     couple: "Marcelo & Michelle",

@@ -10,7 +10,7 @@ const Footer = () => {
         { name: 'Sobre Mí', href: '#about' },
         { name: 'Portfolio', href: '#portfolio' },
         { name: 'Testimonios', href: '#testimonios' },
-        { name: 'Precios', href: '#services' }
+        { name: 'Valor Cotización', href: '#services' }
       ]
     },
   ];
@@ -47,7 +47,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-12">
           <div className="space-y-6">
             <h3 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Santa Cruz Melisa</h3>
-            <p className="text-gray-400 leading-relaxed">Capturando momentos únicos e inmortalizando emociones a través del arte de la fotografía profesional.</p>
+            <p className="text-gray-400 leading-relaxed">Capturando momentos y emociones a través de mi cámara, narrando historias con luz.</p>
             <div className="space-y-3 text-gray-400">
               <p className="flex items-center gap-3"><span>📍</span>San Carlos De Bariloche</p>
               <p className="flex items-center gap-3">
@@ -57,18 +57,6 @@ const Footer = () => {
                 </a>
               </p>
               <p className="flex items-center gap-3"><span>📞</span>+54 9 3541-521405</p>
-            </div>
-            {/* Enlace a Casamientos.com */}
-            <div className="mt-4">
-              <a 
-                href="https://www.casamientos.com.ar/fotografos/melisa-santa-cruz--e177896" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-gray-300 hover:text-white transition"
-              >
-                <span>💍</span>
-                Ver perfil en Casamientos.com
-              </a>
             </div>
           </div>
 
