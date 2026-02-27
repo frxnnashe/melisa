@@ -88,8 +88,19 @@ const Footer = () => {
               </a>
             ))}
           </div>
-          <div className="text-center md:text-right text-gray-400">
+          <div className="text-center md:text-right text-gray-400 space-y-1">
             <p>© {currentYear} Melisa Santa Cruz. Todos los derechos reservados.</p>
+            <p className="text-base text-gray-400">
+              Powered by{' '}
+              <a
+                href="https://www.instagram.com/frannrocchia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white font-semibold hover:text-gray-300 transition underline underline-offset-2"
+              >
+                @frannrocchia
+              </a>
+            </p>
           </div>
         </div>
       </div>
