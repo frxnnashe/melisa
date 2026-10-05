@@ -1,208 +1,140 @@
-import React, { useState, useEffect } from 'react';
-
-// Función para precargar imágenes
-const preloadImages = (imageUrls) => {
-  return Promise.all(
-    imageUrls.map(url => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(url);
-        img.onerror = () => resolve(url);
-        img.src = url;
-      });
-    })
-  );
-};
+import { useEffect, useState } from 'react'
+import {
+  heroImages,
+  instagramUrl,
+  navigation,
+} from '../data/siteContent'
 
 const Hero = () => {
-  const [bgIndex, setBgIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [imagesReady, setImagesReady] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const bgImages = [
-    '/hero/hero-1.webp',
-    '/hero/hero-2.webp',
-    '/hero/hero-3.webp',
-    '/hero/hero-4.webp',
-    '/hero/hero-5.webp',
-    '/hero/hero-6.webp',
-  ];
-
-  const navItems = [
-    { label: 'Inicio', href: '' },
-    { label: 'Portfolio', href: '#portfolio' },
-    { label: 'Precios', href: '#services' },
-    { label: 'Contacto', href: '#footer' },
-  ];
+  const [backgroundIndex, setBackgroundIndex] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    // Precargar todas las imágenes del hero
-    preloadImages(bgImages).then(() => {
-      setImagesReady(true);
-      setIsLoaded(true);
-    });
-  }, []);
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) return undefined
+
+    const timer = window.setInterval(() => {
+      setBackgroundIndex((current) => (current + 1) % heroImages.length)
+    }, 6000)
+
+    return () => window.clearInterval(timer)
+  }, [])
 
   useEffect(() => {
-    // Solo iniciar el carrusel cuando las imágenes estén listas
-    if (!imagesReady) return;
-    
-    const timer = setInterval(() => {
-      setBgIndex(i => (i + 1) % bgImages.length);
-    }, 4000);
-    
-    return () => clearInterval(timer);
-  }, [imagesReady, bgImages.length]);
+    if (!mobileMenuOpen) return undefined
 
-  const handleNavClick = (href) => {
-    setMobileMenuOpen(false);
-    // Pequeño delay para que la animación del menú se complete antes de hacer scroll
-    setTimeout(() => {
-      if (href) {
-        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }, 300);
-  };
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setMobileMenuOpen(false)
+    }
+
+    document.addEventListener('keydown', closeOnEscape)
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape)
+      document.body.style.overflow = ''
+    }
+  }, [mobileMenuOpen])
 
   return (
-    <div id="inicio" className="relative h-screen overflow-hidden bg-gray-900">
-      {/* Fondos */}
-      <div className="absolute inset-0">
-        {bgImages.map((src, i) => (
-          <div
-            key={src}
-            className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${
-              i === bgIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              backgroundImage: imagesReady ? `url(${src})` : 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
-      </div>
+    <header id="inicio" className="relative min-h-[100dvh] overflow-hidden bg-zinc-950 text-white">
+      <img
+        key={heroImages[backgroundIndex]}
+        src={heroImages[backgroundIndex]}
+        alt=""
+        width="2200"
+        height="1467"
+        fetchPriority={backgroundIndex === 0 ? 'high' : 'auto'}
+        className="absolute inset-0 h-full w-full object-cover animate-hero-fade"
+      />
+      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/55" />
 
-      {/* Nav con anclas */}
-      <nav className="relative z-50 p-6 md:p-8">
-        <div className="flex items-center justify-between">
-          <div
-            className={`transition-all duration-1000 delay-300 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-            }`}
-          >
-            <h1 className="text-white font-light text-base md:text-lg tracking-[0.2em] uppercase">
-              Melisa Santa Cruz
-            </h1>
-            <div className="h-px bg-gradient-to-r from-white/60 to-transparent w-24 md:w-32 mt-2" />
-          </div>
+      <nav aria-label="Navegación principal" className="relative z-30 mx-auto flex h-20 max-w-7xl items-center justify-between px-5 md:px-8">
+        <a href="#inicio" className="focus-ring text-sm font-medium uppercase tracking-[0.2em] text-white md:text-base">
+          <h1>Melisa Santa Cruz</h1>
+        </a>
 
-          {/* Desktop Menu */}
-          <div
-            className={`hidden md:flex items-center gap-8 transition-all duration-1000 delay-500 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-            }`}
-          >
-            {navItems.map((item, idx) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-white/80 hover:text-white text-sm font-light tracking-wider uppercase transition-colors duration-300 relative group focus:outline-none"
-                style={{ animationDelay: `${idx * 100}ms` }}
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-1.5 transition-all duration-1000 delay-500 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-            }`}
-            aria-label="Toggle menu"
-          >
-            <span
-              className={`w-6 h-0.5 bg-white transition-all duration-300 ${
-                mobileMenuOpen ? 'rotate-45 translate-y-2' : ''
-              }`}
-            />
-            <span
-              className={`w-6 h-0.5 bg-white transition-all duration-300 ${
-                mobileMenuOpen ? 'opacity-0' : ''
-              }`}
-            />
-            <span
-              className={`w-6 h-0.5 bg-white transition-all duration-300 ${
-                mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
-              }`}
-            />
-          </button>
+        <div className="hidden items-center gap-7 lg:flex">
+          {navigation.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="focus-ring text-sm text-white/85 transition-colors hover:text-white"
+            >
+              {item.label}
+            </a>
+          ))}
         </div>
 
-        {/* Mobile Menu Overlay */}
-        <div
-          className={`md:hidden fixed inset-0 bg-black/95 backdrop-blur-md transition-all duration-500 ${
-            mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-          }`}
-          style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+        <button
+          type="button"
+          aria-label={mobileMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          className="focus-ring relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-black/25 lg:hidden"
         >
-          <div className="flex flex-col items-center justify-center h-full gap-8">
-            {navItems.map((item, idx) => (
+          <span className="sr-only">Menu</span>
+          <span aria-hidden="true" className="flex w-5 flex-col gap-1.5">
+            <span className={`h-px bg-white transition-transform ${mobileMenuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+            <span className={`h-px bg-white transition-opacity ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`h-px bg-white transition-transform ${mobileMenuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+          </span>
+        </button>
+
+        <div
+          id="mobile-navigation"
+          className={`fixed inset-0 z-40 flex items-center justify-center bg-zinc-950/98 px-6 transition-opacity lg:hidden ${
+            mobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
+          }`}
+        >
+          <div className="flex w-full max-w-sm flex-col items-stretch gap-2 text-center">
+            {navigation.map((item) => (
               <a
-                key={item.label}
+                key={item.href}
                 href={item.href}
-                onClick={() => handleNavClick(item.href)}
-                className={`text-white text-2xl font-light tracking-wider uppercase transition-all duration-500 relative group ${
-                  mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}
-                style={{ transitionDelay: mobileMenuOpen ? `${idx * 100 + 200}ms` : '0ms' }}
+                onClick={() => setMobileMenuOpen(false)}
+                className="focus-ring border-b border-white/10 py-4 text-xl text-white"
               >
                 {item.label}
-                <span className="absolute -bottom-2 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </div>
         </div>
       </nav>
 
-      {/* Contenido */}
-      <div className="relative z-40 h-full flex items-center justify-center px-6 md:px-8 -mt-20 md:-mt-0">
-        <div className="text-center max-w-4xl">
-          <div
-            className={`transition-all duration-1000 delay-900 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            <h2 className="text-white text-5xl md:text-8xl font-extralight leading-none mb-6 md:mb-8 tracking-tight">
-              Historias
-              <br />
-              <span className="italic font-light bg-gradient-to-r from-white via-amber-100 to-white bg-clip-text text-transparent">
-                Auténticas
-              </span>
-            </h2>
-          </div>
-
-          <div
-            className={`transition-all duration-1000 delay-1100 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed mb-12 max-w-2xl mx-auto">
-              Narrando historias con luz, mi trabajo es crear retratos que capturan emociones y recuerdos que atesoras para siempre. Con base en la Patagonia, viajo a donde el amor me lleve para documentar tu historia en lugares que respiren naturaleza.
-            </p>
+      <div className="relative z-20 mx-auto flex min-h-[calc(100dvh-5rem)] max-w-7xl items-end px-5 pb-14 md:px-8 md:pb-20">
+        <div className="max-w-3xl">
+          <p className="mb-4 text-sm uppercase tracking-[0.18em] text-white/75">
+            Fotografía en Patagonia y a destino
+          </p>
+          <h2 className="font-display text-5xl font-normal leading-[0.98] tracking-tight md:text-7xl">
+            Historias auténticas
+          </h2>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white md:text-lg">
+            Narrando historias con luz, mi trabajo es crear retratos que capturan emociones y recuerdos. Con base en la Patagonia, viajo a donde el amor y el arte me lleven para documentar tu historia.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#portfolio"
+              className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 font-medium text-zinc-950 transition-transform active:scale-[0.98]"
+            >
+              Ver portfolio
+            </a>
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full border border-white/45 bg-black/20 px-6 font-medium text-white transition-colors hover:bg-white/10"
+            >
+              Instagram
+            </a>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    </header>
+  )
+}
 
-export default Hero;
+export default Hero

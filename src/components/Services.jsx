@@ -1,140 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { services } from '../data/siteContent'
+import { buildWhatsAppUrl } from '../utils/whatsapp'
 
-const Services = () => {
-  const [isVisible,setIsVisible]=useState(false);
-  const [hoveredService,setHoveredService]=useState(null);
-  const sectionRef=useRef(null);
-
-  useEffect(()=>{
-    const io=new IntersectionObserver(([e])=>e.isIntersecting&&setIsVisible(true),{threshold:0.05,rootMargin:'50px'});
-    const el=sectionRef.current;
-    if(el) io.observe(el);
-    return ()=>el&&io.unobserve(el);
-  },[]);
-
-  const services=[
-    {
-      id:1,
-      title:'Fotografía de Boda',
-      description:'Bodas en Bariloche y destino.',
-      features:[
-        'Cobertura completa del evento.',
-        'Sesiones pre-boda.',
-        'Sesiones post-boda.',
-        'Video documental y drone.',
-        'Bodas Íntimas, Elopements de destino.',
-        'Asesoramiento de salones, decoraciones, maquillaje y mucho más.',
-      ],
-      price:'Desde 650 USD', 
-      showQuoteButton: true,
-      icon:'💍',
-      gradient:'from-white to-gray-300',
-      whatsapp:true
-    },
-    {
-      id:2,
-      title:'Fotografía de Retratos',
-      description:'Tour Fotográfico',
-      features:[
-        'Sesiones Personalizadas (Parejas, Familias y Retratos).',
-        'Pedidas de Mano Sorpresa.',
-        'Nuevo servicio de fotografía con drone.',
-        '📍 Locaciones a consultar: Bariloche y alrededores.',
-      ],
-      price:'USD 200',  
-      icon:'📷',
-      gradient:'from-gray-300 to-gray-500',
-      whatsapp:true
-    },
-    {
-      id:3,
-      title:'Fotografía de Eventos',
-      description:' Cobertura profesional',
-      features:[
-        'Fiesta de 15 años.',
-        'Cumpleaños y Eventos Corporativos.',
-        'Video en vivo.',
-        'Video tradicional y reels.'
-      ],
-      price:'USD 400',
-      showQuoteButton: true,
-      icon:'🎉',
-      gradient:'from-gray-400 to-gray-600',
-      whatsapp:true
-    }
-  ];
-
-  const handleWhatsApp = () => {
-    window.open('https://wa.me/5493541521405?text=Hola! Me interesa saber más sobre tus servicios de fotografía.', '_blank');
-  };
-
+function ServiceCard({ service, featured = false }) {
   return (
-    <section id="services" ref={sectionRef} className="py-20 md:py-32 bg-black relative overflow-hidden min-h-[70vh]">
-      <div className="absolute inset-0">
-        <div className="absolute top-40 left-20 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-40 right-20 w-80 h-80 bg-gray-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-20 right-40 w-48 h-48 bg-gray-300/5 rounded-full blur-3xl animate-pulse delay-2000" />
+    <article
+      className={`rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 ${
+        featured ? 'md:col-span-2' : ''
+      }`}
+    >
+      <div className={featured ? 'grid gap-8 md:grid-cols-[0.75fr_1.25fr]' : ''}>
+        <div>
+          <p className="text-sm uppercase tracking-[0.28em] text-amber-200/80">Desde</p>
+          <h3 className="mt-3 font-display text-3xl text-white">{service.title}</h3>
+          <p className="mt-3 text-xl text-amber-100">{service.price}</p>
+        </div>
+
+        <div className={featured ? '' : 'mt-6'}>
+          <ul className="space-y-3 text-sm leading-6 text-zinc-300 sm:text-base">
+            {service.features.map((feature) => (
+              <li key={feature} className="flex gap-3">
+                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-200" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full border border-amber-200/60 px-6 text-sm font-semibold uppercase tracking-[0.16em] text-amber-100 transition hover:bg-amber-100 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-200"
+            href={buildWhatsAppUrl(`Hola Meli, quisiera consultar por ${service.title.toLowerCase()}.`)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Consultar disponibilidad
+          </a>
+        </div>
       </div>
+    </article>
+  )
+}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center space-y-4 mb-16 transition-all duration-1000 ${isVisible?'opacity-100 translate-y-0':'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl lg:text-5xl font-bold text-white">Tarifas y <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Servicios</span></h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-white to-gray-400 rounded-full mx-auto" />
+export default function Services() {
+  return (
+    <section id="services" className="bg-zinc-950 px-5 py-24 text-white sm:px-8 lg:px-12 lg:py-32">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-3xl">
+          <p className="text-sm uppercase tracking-[0.32em] text-amber-200/80">Experiencias a medida</p>
+          <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl lg:text-6xl">Tarifas y Servicios</h2>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg">
+            Cada cobertura se adapta a la historia, el lugar y el ritmo de quienes están frente a cámara.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((s,i)=>(
-            <div key={s.id} className={`group relative bg-white/5 border border-white/10 rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden ${isVisible?'opacity-100 translate-y-0':'opacity-0 translate-y-10'}`} style={{animationDelay:`${i*150}ms`}} onMouseEnter={()=>setHoveredService(s.id)} onMouseLeave={()=>setHoveredService(null)}>
-              <div className={`absolute inset-0 bg-gradient-to-br ${s.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${s.gradient} flex items-center justify-center text-black mb-6 group-hover:scale-110 transition-transform`}>{s.icon}</div>
-              <div className="relative z-10">
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-gray-200 transition-colors">{s.title}</h3>
-                <p className="text-gray-300 mb-6 leading-relaxed">{s.description}</p>
-                <ul className="space-y-2 mb-6">
-                  {s.features.map((f,idx)=>(<li key={idx} className="flex items-center text-gray-400 text-sm"><div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${s.gradient} mr-3`}></div>{f}</li>))}
-                </ul>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className={`text-2xl font-bold bg-gradient-to-r ${s.gradient} bg-clip-text text-transparent block`}>{s.price}</span>
-                      {s.showQuoteButton && (
-                        <p className="text-gray-400 text-sm mt-1">Consultar cotización</p>
-                      )}
-                    </div>
-                    {s.whatsapp && (
-                      <button 
-                        onClick={handleWhatsApp}
-                        className="px-6 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 hover:scale-105 transition flex items-center gap-2"
-                      >
-                        <span>💬</span>
-                        Consultar
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {services.map((service, index) => (
+            <ServiceCard key={service.title} service={service} featured={index === 0} />
           ))}
-        </div>
-
-        <div className={`text-center mt-16 transition-all duration-1000 delay-500 ${isVisible?'opacity-100 translate-y-0':'opacity-0 translate-y-10'}`}>
-          <div className="bg-gradient-to-r from-gray-600 to-gray-800 rounded-3xl p-8 text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/20"></div>
-            <div className="relative z-10">
-              <h3 className="text-3xl font-bold mb-4">¿No encuentras lo que buscas?</h3>
-              <p className="text-xl mb-6 opacity-90">Contáctame para crear un paquete personalizado que se adapte perfectamente a tus necesidades.</p>
-              <button 
-                onClick={handleWhatsApp}
-                className="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition"
-              >
-                Cotización Personalizada
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </section>
-  );
-};
-
-export default Services;
+  )
+}

@@ -1,529 +1,240 @@
-import React, { useState, useEffect, useRef } from "react";
-const preloadImages = (imageUrls) => {
-  return Promise.all(
-    imageUrls.map((url) => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(url);
-        img.onerror = () => resolve(url);
-        img.src = url;
-      });
-    })
-  );
-};
+import { useEffect, useState } from 'react'
+import {
+  eventImages,
+  momentImages,
+  partyImages,
+  photoTourUrl,
+  portraitGroups,
+  portraitLocations,
+  portfolioCategories,
+  postWeddingImages,
+  weddings,
+} from '../data/siteContent'
+import Lightbox from './Lightbox'
 
-// Componente LazyImage optimizado - Precarga agresiva para evitar pantallas negras
-const LazyImage = ({ src, alt, className, onClick, eager = false }) => {
-  const [loaded, setLoaded] = useState(false);
-  const imgRef = useRef(null);
+const toGalleryItems = (images, alt) =>
+  images.map((src, index) => ({ src, alt: `${alt}, fotografía ${index + 1}` }))
 
-  // Cargar TODAS las imágenes inmediatamente, sin lazy loading
-  // Esto evita las pantallas negras durante el scroll
+const Gallery = ({ images, alt, variant = 'standard', onOpen }) => {
+  const items = toGalleryItems(images, alt)
+  const gridClass =
+    variant === 'wide'
+      ? 'grid-cols-1 md:grid-cols-2'
+      : variant === 'dense'
+        ? 'grid-cols-2 md:grid-cols-4'
+        : 'grid-cols-1 md:grid-cols-3'
+
   return (
-    <div ref={imgRef} className="relative w-full h-full bg-gray-900">
-      <img
-        src={src}
-        alt={alt}
-        className={`${className} ${
-          loaded ? "opacity-100" : "opacity-0"
-        } transition-opacity duration-300`}
-        onLoad={() => setLoaded(true)}
-        onClick={onClick}
-        loading={eager ? "eager" : "lazy"}
-        decoding="async"
-      />
-      {/* Skeleton loader mientras carga */}
-      {!loaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 animate-pulse" />
+    <div className={`grid gap-3 ${gridClass}`}>
+      {items.map((image, index) => (
+        <button
+          key={image.src}
+          type="button"
+          aria-label={`Ampliar ${image.alt}`}
+          onClick={() => onOpen(items, index)}
+          className={`focus-ring group overflow-hidden bg-zinc-900 text-left ${
+            variant === 'wide' && index === 0 ? 'md:col-span-2' : ''
+          }`}
+        >
+          <img
+            src={image.src}
+            alt={image.alt}
+            width="1200"
+            height="800"
+            loading="lazy"
+            decoding="async"
+            sizes={variant === 'dense' ? '(min-width: 768px) 25vw, 50vw' : '(min-width: 768px) 33vw, 100vw'}
+            className="aspect-[4/3] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </button>
+      ))}
+    </div>
+  )
+}
+
+const SectionIntro = ({ title, children }) => (
+  <div className="mx-auto mb-12 max-w-3xl text-center">
+    <h3 className="font-display text-3xl leading-tight text-white md:text-5xl">{title}</h3>
+    {children && <p className="mt-5 text-base leading-relaxed text-zinc-300 md:text-lg">{children}</p>}
+  </div>
+)
+
+const Portfolio = () => {
+  const [selectedCategory, setSelectedCategory] = useState('bodas')
+  const [lightbox, setLightbox] = useState(null)
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('whatsapp-context', { detail: selectedCategory }))
+  }, [selectedCategory])
+
+  const openLightbox = (images, index) => setLightbox({ images, index })
+
+  const renderWeddings = () => (
+    <div className="space-y-24">
+      <SectionIntro title="Fotografía de Bodas y Elopements en Bariloche y a destino.">
+        Un servicio de fotografía con estilo documental, desde los preparativos, la ceremonia, la sesión de retratos de pareja, la celebración y la fiesta hasta la última canción.
+      </SectionIntro>
+
+      <div className="text-center">
+        <a
+          href="/bodas-bariloche/"
+          className="focus-ring inline-flex min-h-12 items-center rounded-full border border-white/25 px-6 text-sm font-semibold uppercase tracking-[0.14em] transition hover:bg-white hover:text-zinc-950"
+        >
+          Bodas en Bariloche
+        </a>
+      </div>
+
+      {weddings.map((wedding) => (
+        <article key={wedding.couple} className="space-y-6">
+          <header>
+            <h4 className="font-display text-3xl text-white md:text-4xl">{wedding.couple}</h4>
+            <p className="mt-1 text-sm text-zinc-400">{wedding.location}</p>
+          </header>
+          <Gallery images={wedding.images} alt={`${wedding.couple}, boda en ${wedding.location}`} onOpen={openLightbox} />
+        </article>
+      ))}
+
+      <article className="space-y-7">
+        <SectionIntro title="Bodas: la fiesta" />
+        <Gallery images={partyImages} alt="Fiesta de boda en la Patagonia" variant="dense" onOpen={openLightbox} />
+      </article>
+
+      <article className="space-y-7">
+        <p className="text-center font-display text-xl italic text-zinc-300 md:text-2xl">
+          En un instante en una boda, todo puede suceder.
+        </p>
+        <Gallery images={momentImages} alt="Momento espontáneo durante una boda" variant="wide" onOpen={openLightbox} />
+      </article>
+
+      <article className="space-y-8">
+        <SectionIntro title="Postboda">
+          Una sesión realizada días o meses después de la boda para volver a usar el vestido y recorrer paisajes de la Patagonia en distintas estaciones.
+        </SectionIntro>
+        <Gallery images={postWeddingImages} alt="Sesión postboda en Bariloche" variant="wide" onOpen={openLightbox} />
+        <div className="text-center">
+          <a
+            href={photoTourUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="focus-ring inline-flex min-h-12 items-center rounded-full border border-white/25 px-6 text-white transition-colors hover:bg-white hover:text-zinc-950"
+          >
+            Conocer Bariloche Foto Tour
+          </a>
+        </div>
+      </article>
+    </div>
+  )
+
+  const renderPortraits = () => (
+    <div className="space-y-24">
+      <SectionIntro title="Sesiones y Retratos">
+        Sesiones exclusivas de retratos personalizados, parejas y familias. Tours fotográficos, books y pedidas de mano para capturar momentos únicos.
+      </SectionIntro>
+
+      {portraitGroups.map((group) => (
+        <article key={group.title} className="space-y-6">
+          <header>
+            <h4 className="font-display text-3xl text-white">{group.title}</h4>
+            <p className="mt-2 text-zinc-400">{group.description}</p>
+          </header>
+          <Gallery images={group.images} alt={`${group.title} en la Patagonia`} onOpen={openLightbox} />
+        </article>
+      ))}
+
+      <section className="space-y-12">
+        <SectionIntro title="Locaciones favoritas para tus fotos">
+          Circuito Chico, Valle Encantado, Villa La Angostura, Camino de los 7 Lagos y San Martín de los Andes.
+        </SectionIntro>
+        {portraitLocations
+          .filter((location) => location.images.length > 0)
+          .map((location) => (
+            <article key={location.title} className="space-y-6">
+              <header>
+                <h4 className="font-display text-2xl text-white md:text-3xl">{location.title}</h4>
+                <p className="mt-2 text-zinc-400">{location.description}</p>
+              </header>
+              <Gallery images={location.images} alt={`Sesión de fotos en ${location.title}`} onOpen={openLightbox} />
+            </article>
+          ))}
+      </section>
+    </div>
+  )
+
+  const renderEvents = () => (
+    <div className="space-y-10">
+      <SectionIntro title="Fotografía de eventos">
+        Realizamos una cobertura completa para grandes eventos corporativos, eventos personalizados, aniversarios y cumpleaños de 15. El equipo integra fotografía, filmmaker, video tradicional, video en vivo y dron.
+      </SectionIntro>
+      <Gallery images={eventImages} alt="Cobertura profesional de eventos en Bariloche" variant="dense" onOpen={openLightbox} />
+    </div>
+  )
+
+  const renderUnavailable = (title, description, href) => (
+    <div className="mx-auto max-w-2xl border border-white/10 bg-white/[0.03] p-8 text-center md:p-12">
+      <h3 className="font-display text-3xl text-white">{title}</h3>
+      <p className="mt-4 leading-relaxed text-zinc-300">{description}</p>
+      {href && (
+        <a href={href} className="focus-ring mt-7 inline-flex min-h-12 items-center rounded-full bg-white px-6 font-medium text-zinc-950">
+          Ver sección
+        </a>
       )}
     </div>
-  );
-};
+  )
 
-// DATOS DEL PORTFOLIO
-const weddingsCouples = [
-  {
-    couple: "Sol & Darko",
-    location: "",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-sol-${i + 1}.webp`),
-  },
-  {
-    couple: "Seba & Marian",
-    location: "",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-seba-${i + 1}.webp`),
-  },
-  {
-    couple: "Claudia & Pica",
-    location: "Cervecería Patagonia",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-claudia-${i + 1}.webp`),
-  },
-  {
-    couple: "Maxi & Cami",
-    location: "Capilla San Eduardo, Bariloche",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-maxi-${i + 1}.webp`),
-  },
-  {
-    couple: "Nahir y Juan",
-    location: "Americana Lago Gutierrez, Bariloche",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-nahir-${i + 1}.webp`),
-  },
-  {
-    couple: "Natalia y Pablo",
-    location: "Americana Lago Guitierrez",
-    images: Array.from({ length: 5 }, (_, i) => `/boda-natalia-${i + 1}.webp`),
-  },
-  {
-    couple: "Marcelo & Michelle",
-    location: "Hotel Llao Llao",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-marcelo-${i + 1}.webp`),
-  },
-  {
-    couple: "Barby & Luis",
-    location: "Villa Angostura, Patagonia",
-    images: Array.from({ length: 3 }, (_, i) => `/boda-barby-${i + 1}.webp`),
-  },
-  {
-    couple: "Ema & Made",
-    location: "Club Suizo, Bariloche",
-    images: Array.from({ length: 6 }, (_, i) => `/boda-ema-${i + 1}.webp`),
-  },
-  {
-    couple: "Taty & Eloy",
-    location: "Club Suizo, Bariloche",
-    images: Array.from({ length: 12 }, (_, i) => `/boda-taty-${i + 1}.webp`),
-  },
-];
-
-const partyImages = Array.from(
-  { length: 5 },
-  (_, i) => `/fiesta-${i + 1}.webp`
-);
-const momentsImages = Array.from(
-  { length: 10 },
-  (_, i) => `/instante-${i + 1}.webp`
-);
-const postWeddingImages = Array.from(
-  { length: 3 },
-  (_, i) => `/postboda-${i + 1}.webp`
-);
-
-const portraitsPart1 = [
-  {
-    title: "Sesión exclusiva retratos personalizados, parejas y familias.",
-    description: "Momentos únicos y mucho más...",
-    images: Array.from({ length: 6 }, (_, i) => `/sesiones-${i + 1}.webp`),
-  },
-  {
-    title: "Pedida de mano sorpresa en Bariloche",
-    description: "",
-    images: Array.from({ length: 2 }, (_, i) => `/pedida-${i + 1}.webp`),
-  },
-  {
-    title: "Primavera",
-    description: "Flores y colores vibrantes",
-    images: Array.from({ length: 6 }, (_, i) => `/primavera-${i + 1}.webp`),
-  },
-  {
-    title: "Verano",
-    description: "Lagos turquesas y atardeceres tardíos",
-    images: Array.from({ length: 8 }, (_, i) => `/verano-${i + 1}.webp`),
-  },
-  {
-    title: "Otoño",
-    description: "Tonos ocres y dorados increíbles",
-    images: Array.from({ length: 7 }, (_, i) => `/otoño-${i + 1}.webp`),
-  },
-  {
-    title: "Invierno",
-    description: "Magia bajo la nieve y paisajes blancos. Tus recuerdos más preciados",
-    images: Array.from({ length: 7 }, (_, i) => `/invierno-${i + 1}.webp`),
-  },
-];
-
-const portraitsPart2 = [
-  {
-    images: Array.from({ length: 3 }, (_, i) => `/locaciones-${i + 1}.webp`),
-  },
-  {
-    title: "Circuito Chico",
-    description: "Bahía López - Punto panorámico - Golf de Llao Llao",
-    images: Array.from({ length: 3 }, (_, i) => `/circuito-${i + 1}.webp`),
-  },
-  {
-    title: "Estepa y Mirador de Valle Encantado",
-    description: "Paisajes inmensos y rocosos",
-    images: Array.from({ length: 5 }, (_, i) => `/estepa-${i + 1}.webp`),
-  },
-  {
-    title: "Base del Cerro Catedral",
-    description: "Montaña y aventura",
-    images: Array.from({ length: 3 }, (_, i) => `/catedral-${i + 1}.webp`),
-  },
-];
-
-const eventsData = Array.from({ length: 8 }, (_, i) => ({
-  src: `/evento-${i + 1}.webp`,
-}));
-
-export {
-  LazyImage,
-  preloadImages,
-  weddingsCouples,
-  partyImages,
-  momentsImages,
-  postWeddingImages,
-  portraitsPart1,
-  portraitsPart2,
-  eventsData,
-};
-
-const PortfolioDocumental = () => {
-  const [selectedCategory, setSelectedCategory] = useState("bodas");
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const sectionRef = useRef(null);
-
-  const categories = [
-    { id: "bodas", name: "Historias de Bodas" },
-    { id: "retratos", name: "Sesiones & Retratos" },
-    { id: "eventos", name: "Eventos" },
-  ];
-
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    const el = sectionRef.current;
-    if (el) io.observe(el);
-    return () => el && io.unobserve(el);
-  }, []);
-
-  // Precargar imágenes de la categoría activa
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let imagesToPreload = [];
-    
-    if (selectedCategory === 'bodas') {
-      imagesToPreload = [
-        ...weddingsCouples.flatMap(w => w.images),
-        ...partyImages,
-        ...momentsImages,
-        ...postWeddingImages,
-      ];
-    } else if (selectedCategory === 'retratos') {
-      imagesToPreload = [
-        ...portraitsPart1.flatMap(p => p.images),
-        ...portraitsPart2.flatMap(p => p.images),
-      ];
-    } else if (selectedCategory === 'eventos') {
-      imagesToPreload = eventsData.map(e => e.src);
-    }
-
-    // Precargar en segundo plano
-    if (imagesToPreload.length > 0) {
-      setTimeout(() => {
-        preloadImages(imagesToPreload);
-      }, 100);
-    }
-  }, [selectedCategory, isVisible]);
-
-  // Componente para renderizar grupos de imágenes (retratos)
-  const RenderGroup = ({ group }) => {
-    const isTwoColumns = group.images.length === 2;
-    const gridClass = isTwoColumns
-      ? "md:grid-cols-2 max-w-5xl mx-auto"
-      : "md:grid-cols-3";
-    const heightClass = isTwoColumns ? "h-80 md:h-[500px]" : "h-64 md:h-80";
-
-    return (
-      <div className="mb-24 last:mb-0">
-        {group.title && (
-          <div className="text-center mb-8 px-4">
-            <h3 className="text-2xl md:text-3xl font-serif text-white/90 mb-2">
-              {group.title}
-            </h3>
-            {group.description && (
-              <p className="text-gray-400 text-sm font-light tracking-widest uppercase">
-                {group.description}
-              </p>
-            )}
-          </div>
-        )}
-        <div className={`grid grid-cols-1 ${gridClass} gap-4`}>
-          {group.images.map((imgSrc, idx) => (
-            <div
-              key={idx}
-              onClick={() => setSelectedImage({ image: imgSrc })}
-              className={`${heightClass} overflow-hidden cursor-pointer group`}
-            >
-              <LazyImage
-                src={imgSrc}
-                alt={group.title || "Portfolio"}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-90 group-hover:brightness-100"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  const content = {
+    bodas: renderWeddings,
+    retratos: renderPortraits,
+    eventos: renderEvents,
+    producto: () => renderUnavailable(
+      'Arquitectura y Producto',
+      'La galería se publicará cuando esté disponible una selección completa de trabajos.',
+    ),
+    drone: () => renderUnavailable(
+      'Video & Dron',
+      'Perspectivas aéreas y narrativa cinematográfica sobre los paisajes de la Patagonia.',
+      '#drone',
+    ),
+  }
 
   return (
-    <section
-      id="portfolio"
-      ref={sectionRef}
-      className="py-20 bg-[#0a0a0a] text-white min-h-screen"
-    >
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <h2
-          className="text-5xl md:text-7xl font-light tracking-wide text-center mb-12"
-          style={{ fontFamily: `'Playfair Display', serif` }}
-        >
-          Portfolio
-        </h2>
+    <section id="portfolio" className="bg-zinc-950 py-20 text-white md:py-28">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mb-12 max-w-2xl">
+          <h2 className="font-display text-5xl font-normal tracking-tight md:text-7xl">Portfolio</h2>
+          <p className="mt-5 text-zinc-300">Historias reales, retratos y eventos documentados con una mirada sensible y espontánea.</p>
+        </div>
 
-        {/* Botones de categorías */}
-        <div className="flex flex-wrap justify-center gap-4 mb-20">
-          {categories.map((cat) => (
+        <div role="tablist" aria-label="Categorías del portfolio" className="mb-16 flex gap-2 overflow-x-auto pb-3">
+          {portfolioCategories.map((category) => (
             <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-6 py-2 rounded-full text-sm uppercase tracking-widest transition-all duration-300 border ${
-                selectedCategory === cat.id
-                  ? "bg-white text-black border-white"
-                  : "bg-transparent text-gray-400 border-transparent hover:text-white hover:border-white/30"
+              key={category.id}
+              type="button"
+              role="tab"
+              aria-selected={selectedCategory === category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`focus-ring shrink-0 rounded-full border px-5 py-2.5 text-sm transition-colors ${
+                selectedCategory === category.id
+                  ? 'border-white bg-white text-zinc-950'
+                  : 'border-white/20 text-zinc-300 hover:border-white/50 hover:text-white'
               }`}
             >
-              {cat.name}
+              {category.label}
             </button>
           ))}
         </div>
 
-        {/* Contenido del portfolio - Todas las categorías siempre en el DOM */}
-        <div>
-          {/* BODAS */}
-          <div className={`space-y-32 ${selectedCategory !== "bodas" ? "hidden" : ""}`}>
-              <div className="text-center max-w-3xl mx-auto px-6 py-10 border-b border-white/10">
-                <h3
-                  className="text-4xl md:text-5xl font-serif mb-6"
-                  style={{ fontFamily: `'Playfair Display', serif` }}
-                >
-                  La Boda
-                </h3>
-                <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed">
-                  Un servicio de fotografía con estilo documental, desde los
-                  preparativos, la ceremonia, sesión de retratos de pareja, la
-                  celebración, la fiesta y hasta la última canción.
-                </p>
-              </div>
-
-              {weddingsCouples.map((wedding, wIndex) => {
-                const isTwoPhotos = wedding.images.length === 2;
-                const gridClass = isTwoPhotos
-                  ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
-                  : "grid-cols-1 md:grid-cols-3";
-
-                // Las primeras 2 bodas se cargan EAGER
-                const shouldEagerLoad = wIndex < 2;
-
-                return (
-                  <div key={wIndex}>
-                    <div className="text-center mb-8">
-                      <h3 className="text-3xl md:text-4xl font-serif mb-2">
-                        {wedding.couple}
-                      </h3>
-                      {wedding.location && (
-                        <p className="text-gray-400 text-sm uppercase tracking-widest">
-                          {wedding.location}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className={`grid gap-4 ${gridClass}`}>
-                      {wedding.images.map((imgSrc, idx) => (
-                        <div
-                          key={idx}
-                          onClick={() => setSelectedImage({ image: imgSrc })}
-                          className={`${
-                            isTwoPhotos ? "h-80 md:h-96" : "h-64 md:h-80"
-                          } overflow-hidden cursor-pointer group`}
-                        >
-                          <LazyImage
-                            src={imgSrc}
-                            alt={wedding.couple}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            eager={shouldEagerLoad}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Sección: La Fiesta */}
-              <div>
-                <div className="text-center mb-10">
-                  <span className="inline-block w-16 h-[1px] bg-white/30 mb-6"></span>
-                  <h3 className="text-4xl md:text-5xl font-serif mb-2">
-                    Bodas - La Fiesta
-                  </h3>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                  {partyImages.map((imgSrc, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setSelectedImage({ image: imgSrc })}
-                      className="h-60 md:h-72 overflow-hidden cursor-pointer group"
-                    >
-                      <LazyImage
-                        src={imgSrc}
-                        alt="Fiesta de boda"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sección: Momentos en una Boda */}
-              <div className="py-12 text-center bg-white/5 rounded-sm">
-                <h3 className="text-3xl md:text-5xl font-serif italic text-white/90 px-4 leading-normal mb-12">
-                  "En un instante en una Boda..."
-                  <br />
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12">
-                  {momentsImages.map((imgSrc, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setSelectedImage({ image: imgSrc })}
-                      className="h-80 overflow-hidden cursor-pointer group shadow-lg"
-                    >
-                      <LazyImage
-                        src={imgSrc}
-                        alt="Momento especial"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <h3 className="text-2xl md:text-3xl font-serif italic text-white/60 px-4 mt-12">
-                  ...todo puede suceder.
-                </h3>
-              </div>
-
-              {/* Sección: Postboda */}
-              <div>
-                <div className="text-center max-w-3xl mx-auto px-6 mb-12">
-                  <h3 className="text-4xl md:text-5xl font-serif mb-6">
-                    Postboda
-                  </h3>
-                  <p className="text-lg text-gray-300 font-light leading-relaxed">
-                    Es una sesión que se realiza días o meses después de la
-                    boda, para aprovechar si están de luna de miel en Bariloche,
-                    o si querés volver a usar tu vestido en los hermosos spots
-                    de la Patagonia en diferentes estaciones.
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-                  {postWeddingImages.map((imgSrc, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setSelectedImage({ image: imgSrc })}
-                      className={`overflow-hidden cursor-pointer group ${
-                        idx === 0 ? "md:col-span-2" : ""
-                      } h-80 md:h-96`}
-                    >
-                      <LazyImage
-                        src={imgSrc}
-                        alt="Postboda"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          
-          {/* RETRATOS */}
-          <div className={`space-y-12 ${selectedCategory !== "retratos" ? "hidden" : ""}`}>
-              {/* Primera parte de retratos */}
-              <div>
-                {portraitsPart1.map((group, idx) => (
-                  <RenderGroup key={idx} group={group} />
-                ))}
-              </div>
-
-              {/* Divisor decorativo */}
-              <div className="py-20 text-center">
-                <span className="inline-block w-20 h-[1px] bg-white/20 mb-8"></span>
-                <h2
-                  className="text-3xl md:text-5xl font-light leading-snug px-4"
-                  style={{ fontFamily: `'Playfair Display', serif` }}
-                >
-                  ¿Cuales son nuestras locaciones{" "}
-                  <br className="hidden md:block" /> favoritas para las fotos?
-                </h2>
-                <span className="inline-block w-20 h-[1px] bg-white/20 mt-8"></span>
-              </div>
-
-              {/* Segunda parte de retratos - Locaciones */}
-              <div>
-                {portraitsPart2.map((group, idx) => (
-                  <RenderGroup key={idx} group={group} />
-                ))}
-              </div>
-            </div>
-          
-          {/* EVENTOS */}
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${selectedCategory !== "eventos" ? "hidden" : ""}`}>
-            {eventsData.map((item, i) => (
-              <div
-                key={i}
-                onClick={() => setSelectedImage({ image: item.src })}
-                className="aspect-square overflow-hidden cursor-pointer group"
-              >
-                <LazyImage
-                  src={item.src}
-                  alt="Evento"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <div role="tabpanel">{content[selectedCategory]()}</div>
       </div>
 
-      {/* Modal de imagen ampliada */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center z-50 p-4"
-          onClick={() => setSelectedImage(null)}
-        >
-          <img
-            src={selectedImage.image}
-            className="max-w-full max-h-[90vh] object-contain shadow-2xl"
-            alt=""
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            onClick={() => setSelectedImage(null)}
-            className="absolute top-6 right-6 text-white text-lg hover:scale-110 transition-transform"
-          >
-            ✕
-          </button>
-        </div>
+      {lightbox && (
+        <Lightbox
+          images={lightbox.images}
+          initialIndex={lightbox.index}
+          onClose={() => setLightbox(null)}
+        />
       )}
     </section>
-  );
-};
+  )
+}
 
-export default PortfolioDocumental;
+export default Portfolio

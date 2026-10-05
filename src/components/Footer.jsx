@@ -1,111 +1,58 @@
-import React from 'react';
+import { instagramUrl } from '../data/siteContent'
+import { buildWhatsAppUrl } from '../utils/whatsapp'
 
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+const footerLinks = [
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Sobre mí', href: '#about' },
+  { label: 'Servicios', href: '#services' },
+  { label: 'Opiniones', href: '#testimonios' },
+  { label: 'Contacto', href: '#contacto' },
+]
 
-  const footerSections = [
-    {
-      title: 'Información',
-      links: [
-        { name: 'Sobre Mí', href: '#about' },
-        { name: 'Portfolio', href: '#portfolio' },
-        { name: 'Testimonios', href: '#testimonios' },
-        { name: 'Valor Cotización', href: '#services' }
-      ]
-    },
-  ];
-
-  const socialMedia = [
-    { 
-      name: 'Instagram', 
-      icon: '📷', 
-      color: 'hover:bg-gray-600',
-      href: 'https://www.instagram.com/fotosmelisasantacruz/'
-    },
-    { 
-      name: 'WhatsApp', 
-      icon: '💬', 
-      color: 'hover:bg-gray-500',
-      href: 'https://wa.me/5493541521405'
-    },
-    { 
-      name: 'Email', 
-      icon: '✉', 
-      color: 'hover:bg-gray-800',
-      href: 'mailto:melisasantacruz@gmail.com'
-    },
-  ];
-
+export default function Footer() {
   return (
-    <footer className="bg-black text-white relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gray-500/10 rounded-full blur-3xl" />
+    <footer className="border-t border-white/10 bg-zinc-950 px-5 py-12 text-white sm:px-8 lg:px-12">
+      <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.2fr_0.8fr_1fr]">
+        <div>
+          <p className="font-display text-3xl">Melisa Santa Cruz</p>
+          <p className="mt-4 max-w-sm text-sm leading-6 text-zinc-400">
+            Fotografía de bodas, retratos y eventos en Bariloche y a destino.
+          </p>
+        </div>
+
+        <nav aria-label="Navegación del pie de página">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-200">Secciones</p>
+          <ul className="mt-4 space-y-2 text-sm text-zinc-400">
+            {footerLinks.map((link) => (
+              <li key={link.href}>
+                <a className="hover:text-white" href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-200">Contacto</p>
+          <address className="mt-4 space-y-2 text-sm not-italic text-zinc-400">
+            <p>Bariloche, Patagonia, Argentina</p>
+            <a className="block hover:text-white" href="mailto:melisasantacruz@gmail.com">melisasantacruz@gmail.com</a>
+            <a
+              className="block hover:text-white"
+              href={buildWhatsAppUrl('Hola Meli, quisiera hacer una consulta.')}
+              target="_blank"
+              rel="noreferrer"
+            >
+              +54 9 3541-521405
+            </a>
+            <a className="block hover:text-white" href={instagramUrl} target="_blank" rel="noreferrer">Instagram</a>
+          </address>
+        </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-12">
-          <div className="space-y-6">
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Santa Cruz Melisa</h3>
-            <p className="text-gray-400 leading-relaxed">Capturando momentos y emociones a través de mi cámara, narrando historias con luz.</p>
-            <div className="space-y-3 text-gray-400">
-              <p className="flex items-center gap-3"><span>📍</span>San Carlos De Bariloche</p>
-              <p className="flex items-center gap-3">
-                <span>✉</span>
-                <a href="mailto:melisasantacruz@gmail.com" className="hover:text-white transition">
-                  melisasantacruz@gmail.com
-                </a>
-              </p>
-              <p className="flex items-center gap-3"><span>📞</span>+54 9 3541-521405</p>
-            </div>
-          </div>
-
-          {footerSections.map((s, i) => (
-            <div key={i} className="space-y-6">
-              <h3 className="text-xl font-semibold text-white">{s.title}</h3>
-              <ul className="space-y-3">
-                {s.links.map((l, idx) => (
-                  <li key={idx}>
-                    <a href={l.href} className="text-gray-400 hover:text-gray-200 transition">{l.name}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex space-x-4">
-            {socialMedia.map((s, i) => (
-              <a 
-                key={i} 
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-12 h-12 rounded-xl bg-white/10 text-gray-300 flex items-center justify-center hover:text-white transition ${s.color}`}
-              >
-                {s.icon}
-              </a>
-            ))}
-          </div>
-          <div className="text-center md:text-right text-gray-400 space-y-1">
-            <p>© {currentYear} Melisa Santa Cruz. Todos los derechos reservados.</p>
-            <p className="text-base text-gray-400">
-              Powered by{' '}
-              <a
-                href="https://www.instagram.com/frannrocchia"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white font-semibold hover:text-gray-300 transition underline underline-offset-2"
-              >
-                @frannrocchia
-              </a>
-            </p>
-          </div>
-        </div>
+      <div className="mx-auto mt-10 flex max-w-6xl flex-col gap-2 border-t border-white/10 pt-7 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {new Date().getFullYear()} Melisa Santa Cruz.</p>
+        <p>Fotografía profesional en la Patagonia.</p>
       </div>
     </footer>
-  );
-};
-
-export default Footer;
+  )
+}
