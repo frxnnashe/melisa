@@ -1,102 +1,72 @@
-import React, { useEffect, useState, useRef } from "react";
+import { photoTourUrl } from '../data/siteContent'
 
-const About = () => {
-  const [topVisible, setTopVisible] = useState(false);
-  const [bottomVisible, setBottomVisible] = useState(false);
-  const topRef = useRef(null);
-  const centerRef = useRef(null);
-  const bottomRef = useRef(null);
-
-  useEffect(() => {
-    const opts = { threshold: 0.35 };
-    const ioTop = new IntersectionObserver(
-      ([e]) => setTopVisible(e.isIntersecting),
-      opts
-    );
-    const ioBottom = new IntersectionObserver(
-      ([e]) => setBottomVisible(e.isIntersecting),
-      opts
-    );
-
-    if (topRef.current) ioTop.observe(topRef.current);
-    if (bottomRef.current) ioBottom.observe(bottomRef.current);
-
-    return () => {
-      if (topRef.current) ioTop.unobserve(topRef.current);
-      if (bottomRef.current) ioBottom.unobserve(bottomRef.current);
-    };
-  }, []);
-
+export default function About() {
   return (
-    <section id="about" className="py-20 md:py-32 bg-black overflow-hidden">
-      {/* Foto superior (reveal ↓) */}
-      <div
-        ref={topRef}
-        className="max-w-5xl mx-auto px-6 mb-12"
-      >
-        <img
-          src="/fotobelo.webp"
-          alt="Fotografía 1"
-          className="w-full h-[60vh] object-cover rounded-2xl shadow-2xl"
-        />
-      </div>
+    <section id="about" className="bg-stone-100 px-5 py-24 text-zinc-950 sm:px-8 lg:px-12 lg:py-32">
+      <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div className="relative mx-auto w-full max-w-xl pb-14 sm:pb-20">
+          <img
+            src="/fotobelo.webp"
+            alt="Melisa Santa Cruz fotografiando en la Patagonia"
+            className="aspect-[4/5] w-[82%] rounded-2xl object-cover shadow-2xl"
+            loading="lazy"
+            decoding="async"
+            width="1620"
+            height="1080"
+          />
+          <img
+            src="/about2.webp"
+            alt="Melisa durante una cobertura fotográfica"
+            className="absolute bottom-0 right-0 aspect-[4/3] w-[48%] rounded-2xl border-8 border-stone-100 object-cover shadow-xl"
+            loading="lazy"
+            decoding="async"
+            width="1620"
+            height="1080"
+          />
+        </div>
 
-      {/* Centro: texto "About Me" */}
-      <div
-        ref={centerRef}
-        className="max-w-3xl mx-auto px-6 text-center my-16"
-      >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-          Sobre{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
-            Mi
-          </span>
-        </h2>
+        <div>
+          <p className="text-sm uppercase tracking-[0.3em] text-amber-800">Sobre mí</p>
+          <h2 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
+            Melisa Santa Cruz, Fotógrafa Profesional
+          </h2>
+          <p className="mt-6 font-display text-2xl leading-snug text-amber-900">
+            Capturando momentos únicos y llenos de emociones a través del arte de la fotografía.
+          </p>
+          <div className="mt-8 space-y-5 text-base leading-7 text-zinc-700">
+            <p>
+              Soy fotógrafa profesional con base en Bariloche y más de diez años de experiencia. Mi vínculo con la
+              fotografía comenzó junto a mi abuelo Osvaldo y creció entre estudios de arte, viajes y la búsqueda de
+              una mirada propia.
+            </p>
+            <p>
+              Me especializo en bodas, retratos y experiencias en la Patagonia. Trabajo con luz natural, atención a
+              los gestos y una narrativa documental que permite que cada historia conserve su identidad.
+            </p>
+            <p>
+              También formo parte de Bariloche Foto Tour, una propuesta para recorrer paisajes únicos y convertir el
+              viaje en una experiencia fotográfica personal.
+            </p>
+          </div>
 
-        <p className="text-lg text-gray-300 leading-relaxed mb-6">
-          Soy Melisa Paola Santa Cruz, nacida en Villa Carlos Paz y fotógrafa
-          profesional con más de 10 años de experiencia. Seis de esos años han
-          sido en San Carlos de Bariloche, en el corazón de la Patagonia
-          Argentina.
-        </p>
-
-        <p className="text-lg text-gray-300 leading-relaxed">
-          Mi pasión por la fotografía surgió hace muchos años, inspirada en las
-          fotos de mi abuelo Osvaldo, comencé mis estudios en la escuela de
-          bellas artes. Luego, tuve la oportunidad de viajar con una cámara en
-          mano por Argentina, México, Brasil y España. Esto afianzó aún más mi
-          pasión por la fotografía, la cual considero un excelente medio
-          artístico y creativo de expresión. He explorado diversos géneros
-          fotográficos y, con el tiempo, me especialicé en lo que más me gusta:
-          la fotografía de bodas, documentando historias de amor.
-        </p>
-
-        <p className="text-lg text-gray-300 leading-relaxed mt-6">
-          Actualmente soy fotógrafa en Bariloche sesiones personalizadas,
-          fotógrafa de eventos, productos y mis favoritas las bodas y Elopement
-          a destino . y trabajo de fotografa residente en el Hotel Llao Llao
-          para Bariloche Foto Tour.
-        </p>
-
-        {/* CTA sutil */}
-        <button className="mt-8 px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-800 text-white font-semibold rounded-full hover:scale-105 transition-transform">
-          Ver mi trabajo
-        </button>
-      </div>
-
-      {/* Foto inferior (reveal ↑) */}
-      <div
-        ref={bottomRef}
-        className="max-w-5xl mx-auto px-6 mt-12"
-      >
-        <img
-          src="/about2.webp"
-          alt="Fotografía 2"
-          className="w-full h-[60vh] object-cover rounded-2xl shadow-2xl"
-        />
+          <div className="mt-9 flex flex-wrap gap-4">
+            <a
+              href="#portfolio"
+              className="inline-flex min-h-12 items-center rounded-full bg-zinc-950 px-6 text-sm font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-amber-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-950"
+            >
+              Ver mi trabajo
+            </a>
+            <a
+              href={photoTourUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-12 items-center rounded-full border border-zinc-400 px-6 text-sm font-semibold uppercase tracking-[0.16em] text-zinc-900 transition hover:border-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-950"
+            >
+              Bariloche Foto Tour
+            </a>
+          </div>
+        </div>
       </div>
     </section>
-  );
-};
-
-export default About;
+  )
+}
