@@ -11,8 +11,8 @@ export default function About() {
             className="aspect-[4/5] w-[82%] rounded-2xl object-cover shadow-2xl"
             loading="lazy"
             decoding="async"
-            width="1200"
-            height="1500"
+            width="1620"
+            height="1080"
           />
           <img
             src="/about2.webp"
@@ -20,8 +20,8 @@ export default function About() {
             className="absolute bottom-0 right-0 aspect-[4/3] w-[48%] rounded-2xl border-8 border-stone-100 object-cover shadow-xl"
             loading="lazy"
             decoding="async"
-            width="900"
-            height="675"
+            width="1620"
+            height="1080"
           />
         </div>
 

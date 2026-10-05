@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   heroImages,
   instagramUrl,
@@ -8,6 +8,8 @@ import {
 const Hero = () => {
   const [backgroundIndex, setBackgroundIndex] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const menuButtonRef = useRef(null)
+  const mobileNavigationRef = useRef(null)
 
   useEffect(() => {
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -25,6 +27,19 @@ const Hero = () => {
 
     const closeOnEscape = (event) => {
       if (event.key === 'Escape') setMobileMenuOpen(false)
+      if (event.key === 'Tab') {
+        const links = [...mobileNavigationRef.current.querySelectorAll('a')]
+        const focusable = [menuButtonRef.current, ...links]
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault()
+          last.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault()
+          first.focus()
+        }
+      }
     }
 
     document.addEventListener('keydown', closeOnEscape)
@@ -68,6 +83,7 @@ const Hero = () => {
         </div>
 
         <button
+          ref={menuButtonRef}
           type="button"
           aria-label={mobileMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
           aria-expanded={mobileMenuOpen}
@@ -84,7 +100,9 @@ const Hero = () => {
         </button>
 
         <div
+          ref={mobileNavigationRef}
           id="mobile-navigation"
+          aria-hidden={!mobileMenuOpen}
           className={`fixed inset-0 z-40 flex items-center justify-center bg-zinc-950/98 px-6 transition-opacity lg:hidden ${
             mobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
           }`}

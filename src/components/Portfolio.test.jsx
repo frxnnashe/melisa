@@ -22,6 +22,10 @@ describe('Portfolio', () => {
     expect(screen.queryByText('Taty & Eloy')).not.toBeInTheDocument()
     expect(screen.queryByText('Maxi & Cami')).not.toBeInTheDocument()
     expect(screen.queryByText('Natalia & Pablo')).not.toBeInTheDocument()
+
+    const firstImage = screen.getByAltText(/Sol & Darko, boda.*fotografía 1/i)
+    expect(firstImage).toHaveAttribute('srcset')
+    expect(firstImage.getAttribute('srcset')).toContain('/responsive/')
   })
 
   it('renders only the active category content', () => {
@@ -32,5 +36,17 @@ describe('Portfolio', () => {
       screen.getByText(/tours fotográficos, books y pedidas de mano/i),
     ).toBeInTheDocument()
     expect(screen.queryByText('Sol & Darko')).not.toBeInTheDocument()
+  })
+
+  it('supports arrow-key navigation between tabs', () => {
+    render(<Portfolio />)
+    const firstTab = screen.getByRole('tab', { name: 'Historias de Bodas' })
+
+    firstTab.focus()
+    fireEvent.keyDown(firstTab, { key: 'ArrowRight' })
+
+    const secondTab = screen.getByRole('tab', { name: 'Sesiones y Retratos' })
+    expect(secondTab).toHaveAttribute('aria-selected', 'true')
+    expect(secondTab).toHaveFocus()
   })
 })

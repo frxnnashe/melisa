@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest'
-import { act, render, screen } from '@testing-library/react'
+import { act, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import FloatingWhatsApp from './FloatingWhatsApp'
 
 describe('FloatingWhatsApp', () => {
   afterEach(() => {
+    cleanup()
     vi.unstubAllGlobals()
   })
 
@@ -38,5 +39,21 @@ describe('FloatingWhatsApp', () => {
     expect(disconnect).not.toHaveBeenCalled()
 
     section.remove()
+  })
+
+  it('accepts an initial context for focused landing pages', () => {
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        observe() {}
+        disconnect() {}
+      },
+    )
+
+    render(<FloatingWhatsApp initialContext="bodas" />)
+
+    expect(screen.getByRole('link', { name: 'Consultar por WhatsApp' }).href).toContain(
+      'disponibilidad%20para%20mi%20boda',
+    )
   })
 })

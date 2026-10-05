@@ -9,7 +9,9 @@ const footerLinks = [
   { label: 'Contacto', href: '#contacto' },
 ]
 
-export default function Footer() {
+const landingMissingSections = new Set(['#portfolio', '#about'])
+
+export default function Footer({ homeHrefPrefix = '' }) {
   return (
     <footer className="border-t border-white/10 bg-zinc-950 px-5 py-12 text-white sm:px-8 lg:px-12">
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.2fr_0.8fr_1fr]">
@@ -25,7 +27,12 @@ export default function Footer() {
           <ul className="mt-4 space-y-2 text-sm text-zinc-400">
             {footerLinks.map((link) => (
               <li key={link.href}>
-                <a className="hover:text-white" href={link.href}>{link.label}</a>
+                <a
+                  className="hover:text-white"
+                  href={homeHrefPrefix && landingMissingSections.has(link.href) ? `${homeHrefPrefix}${link.href}` : link.href}
+                >
+                  {link.label}
+                </a>
               </li>
             ))}
           </ul>
@@ -49,7 +56,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto mt-10 flex max-w-6xl flex-col gap-2 border-t border-white/10 pt-7 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto mt-10 flex max-w-6xl flex-col gap-2 border-t border-white/10 pt-7 text-xs text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} Melisa Santa Cruz.</p>
         <p>Fotografía profesional en la Patagonia.</p>
       </div>

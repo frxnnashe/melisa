@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 const Lightbox = ({ images, initialIndex, onClose }) => {
   const [index, setIndex] = useState(initialIndex)
   const closeButtonRef = useRef(null)
+  const dialogRef = useRef(null)
   const previousFocusRef = useRef(null)
   const touchStartXRef = useRef(null)
 
@@ -27,6 +28,18 @@ const Lightbox = ({ images, initialIndex, onClose }) => {
       if (event.key === 'ArrowRight') {
         setIndex((current) => (current + 1) % images.length)
       }
+      if (event.key === 'Tab') {
+        const focusable = [...dialogRef.current.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')]
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault()
+          last.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault()
+          first.focus()
+        }
+      }
     }
 
     document.addEventListener('keydown', handleKeyDown)
@@ -42,6 +55,7 @@ const Lightbox = ({ images, initialIndex, onClose }) => {
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Visor de fotografías"

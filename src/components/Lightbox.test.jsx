@@ -38,4 +38,15 @@ describe('Lightbox', () => {
 
     expect(screen.getByRole('img', { name: 'Segunda foto' })).toBeInTheDocument()
   })
+
+  it('keeps keyboard focus inside the modal', () => {
+    render(<Lightbox images={images} initialIndex={0} onClose={() => {}} />)
+
+    const close = screen.getByRole('button', { name: 'Cerrar galería' })
+    const next = screen.getByRole('button', { name: 'Imagen siguiente' })
+    next.focus()
+    fireEvent.keyDown(document, { key: 'Tab' })
+
+    expect(close).toHaveFocus()
+  })
 })

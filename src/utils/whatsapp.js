@@ -1,6 +1,7 @@
 export const WHATSAPP_NUMBER = '5493541521405'
 
 const contextualMessages = {
+  bodas: 'Hola, quiero consultar disponibilidad para mi boda en Bariloche.',
   portfolio: 'Hola, quiero consultar disponibilidad para mi boda en Bariloche.',
   retratos: 'Hola, quiero informacion sobre una sesion de fotos en la Patagonia.',
   eventos: 'Hola, quiero consultar por la cobertura audiovisual de un evento.',

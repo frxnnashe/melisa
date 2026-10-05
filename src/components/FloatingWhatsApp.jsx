@@ -3,8 +3,8 @@ import { buildWhatsAppUrl, getContextualMessage } from '../utils/whatsapp'
 
 const observedSections = ['portfolio', 'drone', 'services', 'contacto']
 
-export default function FloatingWhatsApp() {
-  const [context, setContext] = useState('default')
+export default function FloatingWhatsApp({ initialContext = 'default' }) {
+  const [context, setContext] = useState(initialContext)
 
   useEffect(() => {
     const handleContext = (event) => setContext(event.detail)

@@ -17,5 +17,11 @@ describe('WeddingLanding', () => {
     expect(screen.getByText('Emma & Dante')).toBeInTheDocument()
     expect(screen.queryByText(/Taty/i)).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Consultar fecha' })).toHaveAttribute('href', '#contacto')
+    expect(screen.getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '/#portfolio')
+    expect(screen.getByRole('link', { name: 'Sobre mí' })).toHaveAttribute('href', '/#about')
+
+    const storyImage = screen.getByAltText(/Sol & Darko, boda/i)
+    expect(storyImage).toHaveAttribute('srcset')
+    expect(storyImage.getAttribute('srcset')).toContain('/responsive/')
   })
 })

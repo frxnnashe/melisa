@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   eventImages,
   momentImages,
@@ -10,6 +10,7 @@ import {
   postWeddingImages,
   weddings,
 } from '../data/siteContent'
+import { responsiveImageSrcSet } from '../utils/images'
 import Lightbox from './Lightbox'
 
 const toGalleryItems = (images, alt) =>
@@ -38,6 +39,7 @@ const Gallery = ({ images, alt, variant = 'standard', onOpen }) => {
         >
           <img
             src={image.src}
+            srcSet={responsiveImageSrcSet(image.src)}
             alt={image.alt}
             width="1200"
             height="800"
@@ -62,12 +64,28 @@ const SectionIntro = ({ title, children }) => (
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('bodas')
   const [lightbox, setLightbox] = useState(null)
+  const tabRefs = useRef([])
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('whatsapp-context', { detail: selectedCategory }))
   }, [selectedCategory])
 
   const openLightbox = (images, index) => setLightbox({ images, index })
+
+  const handleTabKeyDown = (event, index) => {
+    const lastIndex = portfolioCategories.length - 1
+    let nextIndex = index
+
+    if (event.key === 'ArrowRight') nextIndex = index === lastIndex ? 0 : index + 1
+    else if (event.key === 'ArrowLeft') nextIndex = index === 0 ? lastIndex : index - 1
+    else if (event.key === 'Home') nextIndex = 0
+    else if (event.key === 'End') nextIndex = lastIndex
+    else return
+
+    event.preventDefault()
+    setSelectedCategory(portfolioCategories[nextIndex].id)
+    tabRefs.current[nextIndex]?.focus()
+  }
 
   const renderWeddings = () => (
     <div className="space-y-24">
@@ -205,13 +223,18 @@ const Portfolio = () => {
         </div>
 
         <div role="tablist" aria-label="Categorías del portfolio" className="mb-16 flex gap-2 overflow-x-auto pb-3">
-          {portfolioCategories.map((category) => (
+          {portfolioCategories.map((category, index) => (
             <button
               key={category.id}
+              ref={(node) => { tabRefs.current[index] = node }}
               type="button"
               role="tab"
+              id={`portfolio-tab-${category.id}`}
+              aria-controls={`portfolio-panel-${category.id}`}
               aria-selected={selectedCategory === category.id}
+              tabIndex={selectedCategory === category.id ? 0 : -1}
               onClick={() => setSelectedCategory(category.id)}
+              onKeyDown={(event) => handleTabKeyDown(event, index)}
               className={`focus-ring shrink-0 rounded-full border px-5 py-2.5 text-sm transition-colors ${
                 selectedCategory === category.id
                   ? 'border-white bg-white text-zinc-950'
@@ -223,7 +246,14 @@ const Portfolio = () => {
           ))}
         </div>
 
-        <div role="tabpanel">{content[selectedCategory]()}</div>
+        <div
+          role="tabpanel"
+          id={`portfolio-panel-${selectedCategory}`}
+          aria-labelledby={`portfolio-tab-${selectedCategory}`}
+          tabIndex="0"
+        >
+          {content[selectedCategory]()}
+        </div>
       </div>
 
       {lightbox && (

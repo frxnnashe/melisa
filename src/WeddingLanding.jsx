@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import Services from './components/Services'
 import SocialProof from './components/SocialProof'
 import { instagramUrl, weddings } from './data/siteContent'
+import { responsiveImageSrcSet } from './utils/images'
 
 export default function WeddingLanding() {
   return (
@@ -62,6 +63,8 @@ export default function WeddingLanding() {
                 <article key={wedding.couple} className="group relative overflow-hidden rounded-2xl">
                   <img
                     src={wedding.images[0]}
+                    srcSet={responsiveImageSrcSet(wedding.images[0])}
+                    sizes="(min-width: 640px) 50vw, 100vw"
                     alt={`${wedding.couple}, boda en ${wedding.location}`}
                     className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     loading="lazy"
@@ -90,8 +93,8 @@ export default function WeddingLanding() {
         <SocialProof />
         <Contact />
       </main>
-      <Footer />
-      <FloatingWhatsApp />
+      <Footer homeHrefPrefix="/" />
+      <FloatingWhatsApp initialContext="bodas" />
     </div>
   )
 }

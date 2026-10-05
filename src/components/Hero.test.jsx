@@ -30,4 +30,17 @@ describe('Hero', () => {
     fireEvent.click(menuButton)
     expect(menuButton).toHaveAttribute('aria-expanded', 'true')
   })
+
+  it('keeps keyboard focus inside the open mobile menu', () => {
+    const { container } = render(<Hero />)
+    const menuButton = screen.getByRole('button', { name: /abrir menu/i })
+    fireEvent.click(menuButton)
+
+    const mobileLinks = container.querySelectorAll('#mobile-navigation a')
+    const lastLink = mobileLinks[mobileLinks.length - 1]
+    lastLink.focus()
+    fireEvent.keyDown(document, { key: 'Tab' })
+
+    expect(menuButton).toHaveFocus()
+  })
 })

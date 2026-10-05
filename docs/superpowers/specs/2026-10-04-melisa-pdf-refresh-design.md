@@ -56,4 +56,3 @@ Rediseño de preservacion. Se mantiene la paleta oscura y la fotografia como pro
 - ESLint sin errores.
 - Build de produccion desde la ruta real `D:\Marib\appweb\melisa` y desde la ruta enlazada `C:\Users\marib\OneDrive\Escritorio\appweb\melisa`.
 - Auditoria de tamaños de imagenes y ausencia de em dash visible.
-

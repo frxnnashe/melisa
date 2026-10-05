@@ -150,4 +150,3 @@
 - [ ] Verificar pesos y dimensiones de imagenes.
 - [ ] Revisar copy visible, textos alternativos y ausencia de guion largo.
 - [ ] Revisar `git diff --check` y `git status --short`.
-
