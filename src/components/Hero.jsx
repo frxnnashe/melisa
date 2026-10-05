@@ -11,6 +11,17 @@ const Hero = () => {
   const menuButtonRef = useRef(null)
   const mobileNavigationRef = useRef(null)
 
+  const closeMenuAtTarget = (href) => {
+    setMobileMenuOpen(false)
+    const target = document.querySelector(href)
+    if (!target) {
+      menuButtonRef.current?.focus()
+      return
+    }
+    target.setAttribute('tabindex', '-1')
+    window.requestAnimationFrame(() => target.focus({ preventScroll: true }))
+  }
+
   useEffect(() => {
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     if (reducedMotion) return undefined
@@ -26,7 +37,11 @@ const Hero = () => {
     if (!mobileMenuOpen) return undefined
 
     const closeOnEscape = (event) => {
-      if (event.key === 'Escape') setMobileMenuOpen(false)
+      if (event.key === 'Escape') {
+        setMobileMenuOpen(false)
+        menuButtonRef.current?.focus()
+        return
+      }
       if (event.key === 'Tab') {
         const links = [...mobileNavigationRef.current.querySelectorAll('a')]
         const focusable = [menuButtonRef.current, ...links]
@@ -112,7 +127,7 @@ const Hero = () => {
               <a
                 key={item.href}
                 href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => closeMenuAtTarget(item.href)}
                 className="focus-ring border-b border-white/10 py-4 text-xl text-white"
               >
                 {item.label}

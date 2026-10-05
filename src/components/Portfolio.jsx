@@ -25,6 +25,19 @@ const Gallery = ({ images, alt, variant = 'standard', onOpen }) => {
         ? 'grid-cols-2 md:grid-cols-4'
         : 'grid-cols-1 md:grid-cols-3'
 
+  const imageSizes = (index) => {
+    if (variant === 'wide' && index === 0) {
+      return '(min-width: 1280px) 1216px, (min-width: 768px) calc(100vw - 4rem), 100vw'
+    }
+    if (variant === 'wide') {
+      return '(min-width: 1280px) 600px, (min-width: 768px) calc(50vw - 2rem), 100vw'
+    }
+    if (variant === 'dense') {
+      return '(min-width: 1280px) 296px, (min-width: 768px) 25vw, 50vw'
+    }
+    return '(min-width: 1280px) 400px, (min-width: 768px) 33vw, 100vw'
+  }
+
   return (
     <div className={`grid gap-3 ${gridClass}`}>
       {items.map((image, index) => (
@@ -39,13 +52,13 @@ const Gallery = ({ images, alt, variant = 'standard', onOpen }) => {
         >
           <img
             src={image.src}
-            srcSet={responsiveImageSrcSet(image.src)}
+            srcSet={responsiveImageSrcSet(image.src, variant === 'wide' && index === 0 ? 1620 : undefined)}
             alt={image.alt}
             width="1200"
             height="800"
             loading="lazy"
             decoding="async"
-            sizes={variant === 'dense' ? '(min-width: 768px) 25vw, 50vw' : '(min-width: 768px) 33vw, 100vw'}
+            sizes={imageSizes(index)}
             className="aspect-[4/3] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         </button>

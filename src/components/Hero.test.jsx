@@ -43,4 +43,16 @@ describe('Hero', () => {
 
     expect(menuButton).toHaveFocus()
   })
+
+  it('restores focus to the menu button when Escape closes the menu', () => {
+    const { container } = render(<Hero />)
+    const menuButton = screen.getByRole('button', { name: /abrir menu/i })
+    fireEvent.click(menuButton)
+
+    container.querySelector('#mobile-navigation a').focus()
+    fireEvent.keyDown(document, { key: 'Escape' })
+
+    expect(menuButton).toHaveFocus()
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false')
+  })
 })
